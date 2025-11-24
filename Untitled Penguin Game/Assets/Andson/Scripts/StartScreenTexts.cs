@@ -9,6 +9,7 @@ public class StartScreenTexts : MonoBehaviour
     public List<string> startScreenWordsList;
     public TextMeshProUGUI startScreenText;
     private int currentTextIndex = 0;
+    public GameObject startScreen;
     
     // Start is called before the first frame update
     void Start()
@@ -19,16 +20,22 @@ public class StartScreenTexts : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.anyKeyDown)
-        {
-            OnClickNextWord();
-        }
+        
     }
 
     public void OnClickNextWord()
     {
-        currentTextIndex += 1;
-        startScreenText.text = startScreenWordsList[currentTextIndex];
+        if (currentTextIndex < startScreenWordsList.Count - 1)
+        {
+            currentTextIndex += 1;
+            startScreenText.text = startScreenWordsList[currentTextIndex];
+
+        }
+        else if (currentTextIndex >= startScreenWordsList.Count - 1)
+        {
+            startScreen.SetActive(false);
+        }
+        
 
     }
 }
