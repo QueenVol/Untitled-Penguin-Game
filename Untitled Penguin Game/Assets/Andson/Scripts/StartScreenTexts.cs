@@ -10,11 +10,15 @@ public class StartScreenTexts : MonoBehaviour
     public TextMeshProUGUI startScreenText;
     private int currentTextIndex = 0;
     public GameObject startScreen;
+
+    public static bool isPaused = true;
     
     // Start is called before the first frame update
     void Start()
     {
         startScreenText.text = startScreenWordsList[currentTextIndex];
+
+        Time.timeScale = 0;
     }
 
     // Update is called once per frame
@@ -34,8 +38,11 @@ public class StartScreenTexts : MonoBehaviour
         else if (currentTextIndex >= startScreenWordsList.Count - 1)
         {
             startScreen.SetActive(false);
+            isPaused = false;
+            Time.timeScale = 1;
+
         }
-        
+
 
     }
 }

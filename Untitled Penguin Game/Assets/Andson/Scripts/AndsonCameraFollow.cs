@@ -14,22 +14,28 @@ public class AndsonCameraFollow : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+       
     }
 
     void LateUpdate()
     {
-        // --- Mouse look ---
-        yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        pitch = Mathf.Clamp(pitch, -40f, 60f);
+        if (!StartScreenTexts.isPaused)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            // --- Mouse look ---
+            yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+            pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+            pitch = Mathf.Clamp(pitch, -40f, 60f);
 
-        // --- Apply rotation to CameraRig ---
-        transform.rotation = Quaternion.Euler(pitch, yaw, 0);
+            // --- Apply rotation to CameraRig ---
+            transform.rotation = Quaternion.Euler(pitch, yaw, 0);
 
-        // --- Put Camera behind and above player ---
-        Vector3 offset = transform.rotation * new Vector3(0, height, -distance);
-        transform.position = target.position + offset;
+            // --- Put Camera behind and above player ---
+            Vector3 offset = transform.rotation * new Vector3(0, height, -distance);
+            transform.position = target.position + offset;
+        }
+
+       
     }
 }
