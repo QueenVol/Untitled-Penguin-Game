@@ -17,6 +17,10 @@ public class AndsonPlayerMovement : MonoBehaviour
     public GameObject movingSprite;
     public GameObject movingEffect;
 
+    public float explosionForce = 15f;   // 冲击力度
+    public float upwardForce = 5f;       // 向上抬升，让玩家“跳起来”更像炸飞
+    private HashSet<Collider> usedExplosionTriggers = new HashSet<Collider>();
+
 
     private bool isGrounded;
 
@@ -62,13 +66,13 @@ public class AndsonPlayerMovement : MonoBehaviour
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
 
-            if (moveDirection.magnitude != 0)
+            if (rb.velocity.magnitude!=0)
             {
                 staticSprite.SetActive(false);
                 movingSprite.SetActive(true);
                 movingEffect.SetActive(true);
             }
-            else
+            else if (rb.velocity.magnitude<=0)
             {
                 staticSprite.SetActive(true);
                 movingSprite.SetActive(false);
@@ -85,5 +89,36 @@ public class AndsonPlayerMovement : MonoBehaviour
         Vector3 targetVelocity = moveDirection * moveSpeed;
         Vector3 velocity = new Vector3(targetVelocity.x, rb.velocity.y, targetVelocity.z);
         rb.velocity = velocity;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // 如果你不想对某些东西触发，可以检查 Tag
+        // if (!other.CompareTag("ExplosionObject")) return;
+
+        if (!other.CompareTag("Fire")) return;
+        // 计算玩家相对于物体的方向 = 玩家位置 - 物体位置
+        if (usedExplosionTriggers.Contains(other))
+        {
+            return;
+        }
+
+        // 第一次触发：先记录下来，防止以后再次生效
+        usedExplosionTriggers.Add(other);
+
+        // 计算“玩家相对于物体”的方向（物体 -> 玩家）
+        Vector3 direction = (transform.position - other.transform.position).normalized;
+
+        // 最终力：水平推开 + 向上抬起
+        Vector3 finalForce = direction * explosionForce + Vector3.up * upwardForce;
+
+        // 可选：清掉当前速度，防止跟现有速度叠加出奇怪结果
+        rb.velocity = Vector3.zero;
+
+        // 施加冲击力
+        rb.AddForce(finalForce, ForceMode.Impulse);
+
+        // 可选：如果这个物体以后完全没用了，可以直接关掉它的 Collider
+         other.enabled = false;
     }
 }

@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 5495095741426035370}
   - component: {fileID: 8879842427710413341}
   - component: {fileID: 2667948439389862472}
+  - component: {fileID: 2677496471499949374}
   m_Layer: 0
   m_Name: explosion-explode-ezgif.com-gif-to-sprite-converter_0
-  m_TagString: Untagged
+  m_TagString: Fire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.62, y: 2.62, z: 2.62}
+  m_LocalScale: {x: 4.02, y: 4.02, z: 4.02}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -133,3 +134,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clipName: Explode
+--- !u!136 &2677496471499949374
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2626217550719306608}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.28
+  m_Height: 0.65
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.06, z: 0}
