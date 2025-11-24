@@ -12,6 +12,12 @@ public class AndsonPlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private Vector3 moveDirection;
 
+
+    public GameObject staticSprite;
+    public GameObject movingSprite;
+    public GameObject movingEffect;
+
+
     private bool isGrounded;
 
     void Start()
@@ -51,6 +57,20 @@ public class AndsonPlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+
+        if (moveDirection.magnitude != 0)
+        {
+            staticSprite.SetActive(false);
+            movingSprite.SetActive(true);
+            movingEffect.SetActive(true);
+        }
+        else
+        {
+            staticSprite.SetActive(true);
+            movingSprite.SetActive(false);
+            movingEffect.SetActive(false);
+
         }
     }
 
