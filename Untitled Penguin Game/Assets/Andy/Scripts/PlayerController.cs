@@ -19,11 +19,14 @@ public class PlayerController : MonoBehaviour
     public GameObject leg2;
     public GameObject wing1;
     public GameObject wing2;
+    public GameObject penguin;
 
     public GameObject levelMusic;
     public GameObject levelMusic2;
+    public GameObject levelMusic3;
     public GameObject musicTrigger;
     public GameObject musicTrigger2;
+    public GameObject musicTrigger3;
     public GameObject message;
 
     //states
@@ -149,6 +152,12 @@ public class PlayerController : MonoBehaviour
         {
             levelMusic2.SetActive(true);
             Destroy(musicTrigger2);
+        }
+        if (collision.gameObject.tag == "Music3")
+        {
+            levelMusic3.SetActive(true);
+            Destroy(musicTrigger3);
+            penguin.SetActive(false);
         }
         if (collision.gameObject.tag == "Grave")
         {
