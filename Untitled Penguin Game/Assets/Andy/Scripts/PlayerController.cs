@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -11,10 +12,19 @@ public class PlayerController : MonoBehaviour
     private Animator myAnim;
     private BoxCollider2D myFeet;
     private bool isGround;
+    public bool jumped = false;
 
     //Body parts
     public GameObject leg1;
     public GameObject leg2;
+    public GameObject wing1;
+    public GameObject wing2;
+
+    public GameObject levelMusic;
+    public GameObject levelMusic2;
+    public GameObject musicTrigger;
+    public GameObject musicTrigger2;
+    public GameObject message;
 
     //states
     public bool isLeg = false;
@@ -52,14 +62,13 @@ public class PlayerController : MonoBehaviour
         bool playerHasXAxisSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
         if (playerHasXAxisSpeed)
         {
-            if (myRigidbody.velocity.x > 0.1f)
+            if (myRigidbody.velocity.x > 0f)
             {
                 myAnim.SetBool("Right", true);
                 myAnim.SetBool("Left", false);
             }
-            //transform.localRotation = Quaternion.Euler(0, 0, 0);
 
-            if (myRigidbody.velocity.x < -0.1f)
+            if (myRigidbody.velocity.x < -0f)
             {
                 myAnim.SetBool("Left", true);
                 myAnim.SetBool("Right", false);
@@ -75,7 +84,6 @@ public class PlayerController : MonoBehaviour
         Vector2 playerVel = new Vector2(moveDir * runSpeed, myRigidbody.velocity.y);
 
         myRigidbody.velocity = playerVel;
-        myAnim.SetBool("Running", true);
     }
 
     void Jump()
@@ -83,11 +91,21 @@ public class PlayerController : MonoBehaviour
         if ((Input.GetButtonDown("Jump")
               || Input.GetKeyDown("w")
               || Input.GetKeyDown("up"))
+             && isWing && jumped)
+        {
+            Debug.Log("Second Jump");
+            Vector2 jumpVel = new Vector2(0.0f, jumpSpeed);
+            myRigidbody.velocity = Vector2.up * jumpVel * 1.2f;
+            jumped = false;
+        }
+        if ((Input.GetButtonDown("Jump")
+              || Input.GetKeyDown("w")
+              || Input.GetKeyDown("up"))
              && isGround)
         {
             Vector2 jumpVel = new Vector2(0.0f, jumpSpeed);
             myRigidbody.velocity = Vector2.up * jumpVel;
-
+            jumped = true;
         }
     }
     void OnCollisionEnter2D(Collision2D collision)
@@ -100,7 +118,41 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.tag == "Wing")
         {
-            //
+            Wing();
+            isWing = true;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Water")
+        {
+            myRigidbody.gravityScale = -1;
+        }
+        if (collision.gameObject.tag == "Grave")
+        {
+            message.SetActive(true);
+        }
+    }
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Water")
+        {
+            myRigidbody.gravityScale = 1;
+        }
+        if (collision.gameObject.tag == "Music")
+        {
+            levelMusic.SetActive(true);
+            Destroy(musicTrigger);
+        }
+        if (collision.gameObject.tag == "Music2")
+        {
+            levelMusic2.SetActive(true);
+            Destroy(musicTrigger2);
+        }
+        if (collision.gameObject.tag == "Grave")
+        {
+            message.SetActive(false);
         }
     }
 
@@ -115,15 +167,34 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void Wing()
+    {
+
+        if (isWing == false)
+        {
+            audio.PlayOneShot(eggCrack);
+            wing1.SetActive(true);
+            wing2.SetActive(true);
+        }
+    }
+
     void SwitchAnimation()
     {
-        if (myRigidbody.velocity.x > 0.1f || myRigidbody.velocity.x < -0.1f)
+        if (Input.GetKey(KeyCode.A))
         {
-            myAnim.SetBool("Running", true);
+            myAnim.SetBool("Left", true);
         }
         else
         {
-            myAnim.SetBool("Running", false);
+            myAnim.SetBool("Left", false);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            myAnim.SetBool("Right", true);
+        }
+        else
+        {
+            myAnim.SetBool("Right", false);
         }
 
         if (myRigidbody.velocity.y < 0.0f)

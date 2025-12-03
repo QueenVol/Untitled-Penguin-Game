@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Leg
   - Wing
+  - Water
+  - Music
+  - Grave
+  - Music2
   layers:
   - Default
   - TransparentFX
