@@ -26,7 +26,7 @@ public class AndsonCameraFollow : MonoBehaviour
             // --- Mouse look ---
             yaw += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-            pitch = Mathf.Clamp(pitch, -40f, 60f);
+            pitch = Mathf.Clamp(pitch, -40f, 90f);
 
             // --- Apply rotation to CameraRig ---
             transform.rotation = Quaternion.Euler(pitch, yaw, 0);
