@@ -69,6 +69,7 @@ public class AndsonCentralRaySpawner : MonoBehaviour
             if (spawnPrefab != null)
             {
                 Instantiate(spawnPrefab, hit.point, rot);
+                AndsonSoundSystem.instance.PlaySound("explode");
             }
             else
             {

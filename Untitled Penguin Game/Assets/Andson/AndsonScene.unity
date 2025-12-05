@@ -5955,6 +5955,12 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
+  - name: explode
+    clip: {fileID: 8300000, guid: 4e2e700dd3c3b2e4085fe23e5e7ce129, type: 3}
+    volume: 0.195
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   music:
   - name: Imagine
     clip: {fileID: 8300000, guid: f1b57f6b2040aec4c870bd2c1a2d9768, type: 3}
