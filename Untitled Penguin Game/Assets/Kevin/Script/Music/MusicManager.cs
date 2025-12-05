@@ -9,6 +9,8 @@ public class MusicManager : MonoBehaviour
     public AudioSource musicSource;
     public AudioClip normalMusic;
     public AudioClip chaseMusic;
+    public AudioClip historyMusic;
+    public AudioClip finalMusic;
 
     void Awake()
     {
@@ -30,6 +32,24 @@ public class MusicManager : MonoBehaviour
         if (musicSource.clip == chaseMusic) return;
 
         musicSource.clip = chaseMusic;
+        musicSource.volume = 1f;
+        musicSource.Play();
+    }
+
+    public void PlayHistoryMusic()
+    {
+        if (musicSource.clip == historyMusic) return;
+
+        musicSource.clip = historyMusic;
+        musicSource.volume = 1f;
+        musicSource.Play();
+    }
+
+    public void PlayFinalMusic()
+    {
+        if (musicSource.clip == finalMusic) return;
+
+        musicSource.clip = finalMusic;
         musicSource.volume = 1f;
         musicSource.Play();
     }
