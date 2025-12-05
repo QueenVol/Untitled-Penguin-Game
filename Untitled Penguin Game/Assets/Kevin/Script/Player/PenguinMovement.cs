@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class PenguinMovement : MonoBehaviour
@@ -49,10 +50,15 @@ public class PenguinMovement : MonoBehaviour
 
     void CheckGround()
     {
-        isGrounded = Physics2D.OverlapCircle(
-            groundCheck.position,
-            checkRadius,
-            groundLayer
-        );
+        Collider2D hit = Physics2D.OverlapCircle(
+        groundCheck.position,
+        checkRadius,
+        groundLayer
+    );
+
+        if (hit != null && hit.isTrigger == false)
+            isGrounded = true;
+        else
+            isGrounded = false;
     }
 }
