@@ -126,6 +126,10 @@ namespace StarterAssets
             }
         }
 
+        [Header("Respawn")]
+        public Transform SpawnPoint;
+        private Vector3 _startPosition;
+
 
         private void Awake()
         {
@@ -138,6 +142,7 @@ namespace StarterAssets
 
         private void Start()
         {
+            _startPosition = transform.position;
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
@@ -402,10 +407,36 @@ namespace StarterAssets
             _canRotate = canRotate;
         }
 
+        public void Respawn()
+        {
+            // Disable controller to move transform directly
+            _controller.enabled = false;
+            
+            if (SpawnPoint != null)
+            {
+                transform.position = SpawnPoint.position;
+                transform.rotation = SpawnPoint.rotation;
+            }
+            else
+            {
+                transform.position = _startPosition;
+            }
+
+            // Reset velocities
+            _verticalVelocity = 0f;
+            _speed = 0f;
+            
+            // Re-enable controller
+            _controller.enabled = true;
+        }
+
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
             if (hit.gameObject.TryGetComponent<BubbleProjectile>(out BubbleProjectile bubble))
             {
+                // Only bounce if the bubble is stuck
+                if (!bubble.IsStuck) return;
+
                 // Bounce off the bubble
                 // Using a high vertical velocity to simulate a bounce
                 // We use the JumpHeight formula but multiplied to give a "super bounce" feeling or just same as jump
@@ -413,12 +444,15 @@ namespace StarterAssets
                 
                 // Reset jump timeout so we can jump again immediately if needed (optional)
                 _jumpTimeoutDelta = JumpTimeout;
-                
+          
                 // Update animator to jump state
                 if (_hasAnimator)
                 {
                     _animator.SetBool(_animIDJump, true);
                 }
+                
+                // Destroy the bubble after bouncing
+                bubble.Pop();
             }
         }
     }

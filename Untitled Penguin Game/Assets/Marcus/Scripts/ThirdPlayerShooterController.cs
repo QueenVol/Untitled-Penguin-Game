@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using StarterAssets;
 using UnityEngine.InputSystem;
+using System;
 
 public class ThirdPlayerShooter : MonoBehaviour
 {
@@ -34,14 +35,26 @@ public class ThirdPlayerShooter : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
         Transform hitTransform = null;
         if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayer)) {
-            _debugTransform.position = hit.point;
+            //_debugTransform.position = hit.point;
             mousePosition = hit.point;
             hitTransform = hit.transform;
+        } else {
+            mousePosition = ray.GetPoint(999f);
+            //_debugTransform.position = mousePosition;
         } 
+
+        // Toggle Shooting Mode
+        if (Keyboard.current != null && Keyboard.current.gKey.wasPressedThisFrame)
+        {
+            isBubbleMode = !isBubbleMode;
+            Debug.Log("Switched to " + (isBubbleMode ? "Bubble" : "Normal") + " mode");
+        }
+
         if (_input.aim) {
             _aimVirtualCamera.gameObject.SetActive(true);
             _thirdPersonController.SetSensitivity(_aimSensitivity);
             _thirdPersonController.SetCanRotate(false);
+            _animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
 
             Vector3 worldAimTarget = mousePosition;
             worldAimTarget.y = transform.position.y;
@@ -52,6 +65,7 @@ public class ThirdPlayerShooter : MonoBehaviour
             _aimVirtualCamera.gameObject.SetActive(false);
             _thirdPersonController.SetSensitivity(_normalSensitivity);
             _thirdPersonController.SetCanRotate(true);
+            _animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
         }
         
         if (_input.shoot) {
