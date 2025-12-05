@@ -14,7 +14,7 @@ public class ThirdPlayerShooter : MonoBehaviour
     [SerializeField] private GameObject pfBubbleBullet;
     [SerializeField] private Transform spawnBulletPosition;
     
-    private bool isBubbleMode = false;
+    [SerializeField] private bool isBubbleMode = false;
     private StarterAssetsInputs _input;
     private ThirdPersonController _thirdPersonController;
     [SerializeField] private LayerMask aimColliderLayer = new LayerMask();
@@ -69,27 +69,31 @@ public class ThirdPlayerShooter : MonoBehaviour
         }
         
         if (_input.shoot) {
-            if (isBubbleMode)
+            // Only shoot if aiming
+            if (_input.aim)
             {
-                if (pfBubbleBullet != null)
+                if (isBubbleMode)
                 {
-                    Vector3 spawnPos = spawnBulletPosition != null ? spawnBulletPosition.position : transform.position + Vector3.up * 1.5f;
-                    Vector3 aimDir = (mousePosition - spawnPos).normalized;
-                    Instantiate(pfBubbleBullet, spawnPos, Quaternion.LookRotation(aimDir, Vector3.up));
+                    if (pfBubbleBullet != null)
+                    {
+                        Vector3 spawnPos = spawnBulletPosition != null ? spawnBulletPosition.position : transform.position + Vector3.up * 1.5f;
+                        Vector3 aimDir = (mousePosition - spawnPos).normalized;
+                        Instantiate(pfBubbleBullet, spawnPos, Quaternion.LookRotation(aimDir, Vector3.up));
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Bubble Bullet Prefab not assigned!");
+                    }
                 }
                 else
                 {
-                    Debug.LogWarning("Bubble Bullet Prefab not assigned!");
-                }
-            }
-            else
-            {
-                if (hitTransform != null) {
-                    if (hitTransform.GetComponent<Health>() != null) {
-                        Debug.Log("Shooting at " + hitTransform.name);
-                    }
-                    else {
-                        Debug.Log("No health component found on " + hitTransform.name);
+                    if (hitTransform != null) {
+                        if (hitTransform.GetComponent<Health>() != null) {
+                            Debug.Log("Shooting at " + hitTransform.name);
+                        }
+                        else {
+                            Debug.Log("No health component found on " + hitTransform.name);
+                        }
                     }
                 }
             }
