@@ -6,6 +6,9 @@ TagManager:
   tags:
   - CinemachineTarget
   - Fire
+  - Void
+  - Tutor
+  - End
   layers:
   - Default
   - TransparentFX

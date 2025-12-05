@@ -21,28 +21,43 @@ public class AndsonPlayerMovement : MonoBehaviour
     public float upwardForce = 5f;       // 向上抬升，让玩家“跳起来”更像炸飞
     private HashSet<Collider> usedExplosionTriggers = new HashSet<Collider>();
 
+    public Transform startPlace;
 
-    private bool isGrounded;
+    public bool isGrounded;
+    public bool isBlownUp;
+    private bool wasGroundedLastFrame;
+
+    public GameObject tutorTalk;
+    public GameObject endTalk;
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; // 防止物理系统把角色撞倒
+        wasGroundedLastFrame = true;   // 一开始默认在地面上
+
     }
 
     void Update()
     {
         if (!StartScreenTexts.isPaused)
         {
-
             // --- Ground Check ---
             isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f);
+
+            if (isBlownUp && !wasGroundedLastFrame && isGrounded)
+            {
+                isBlownUp = false;
+            }
+
+            // 记住这帧的结果，下一帧用来对比
+            wasGroundedLastFrame = isGrounded;
 
             // --- Input ---
             float horizontal = Input.GetAxisRaw("Horizontal");
             float vertical = Input.GetAxisRaw("Vertical");
 
-            // camera-based move direction
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
 
@@ -53,34 +68,31 @@ public class AndsonPlayerMovement : MonoBehaviour
 
             moveDirection = (camForward * vertical + camRight * horizontal).normalized;
 
-            // --- Rotate towards movement direction ---
             if (moveDirection.magnitude > 0.1f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
 
-            // --- Jump ---
             if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             {
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
 
-            if (rb.velocity.magnitude!=0)
+            // ★ 展示爆炸中的特效
+            if (!isGrounded && isBlownUp)
             {
                 staticSprite.SetActive(false);
                 movingSprite.SetActive(true);
                 movingEffect.SetActive(true);
             }
-            else if (rb.velocity.magnitude<=0)
+            else if (isGrounded)  // 落地统一恢复
             {
                 staticSprite.SetActive(true);
                 movingSprite.SetActive(false);
                 movingEffect.SetActive(false);
-
             }
         }
-
     }
 
     void FixedUpdate()
@@ -95,6 +107,19 @@ public class AndsonPlayerMovement : MonoBehaviour
     {
         // 如果你不想对某些东西触发，可以检查 Tag
         // if (!other.CompareTag("ExplosionObject")) return;
+        if (other.CompareTag("Void"))
+        {
+            this.transform.position = startPlace.position;
+        }
+
+        if (other.CompareTag("Tutor"))
+        {
+            tutorTalk.SetActive(true);
+        }
+        if (other.CompareTag("End"))
+        {
+            endTalk.SetActive(true);
+        }
 
         if (!other.CompareTag("Fire")) return;
         // 计算玩家相对于物体的方向 = 玩家位置 - 物体位置
@@ -106,6 +131,7 @@ public class AndsonPlayerMovement : MonoBehaviour
         // 第一次触发：先记录下来，防止以后再次生效
         usedExplosionTriggers.Add(other);
 
+
         // 计算“玩家相对于物体”的方向（物体 -> 玩家）
         Vector3 direction = (transform.position - other.transform.position).normalized;
 
@@ -115,10 +141,24 @@ public class AndsonPlayerMovement : MonoBehaviour
         // 可选：清掉当前速度，防止跟现有速度叠加出奇怪结果
         rb.velocity = Vector3.zero;
 
+        isBlownUp = true;
+
         // 施加冲击力
         rb.AddForce(finalForce, ForceMode.Impulse);
 
         // 可选：如果这个物体以后完全没用了，可以直接关掉它的 Collider
          other.enabled = false;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Tutor"))
+        {
+            tutorTalk.SetActive(false);
+        }
+        if (other.CompareTag("End"))
+        {
+            endTalk.SetActive(false);
+        }
     }
 }

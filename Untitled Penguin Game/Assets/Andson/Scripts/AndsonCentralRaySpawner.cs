@@ -18,6 +18,8 @@ public class AndsonCentralRaySpawner : MonoBehaviour
     [Header("发射射线的按键")]
     public KeyCode fireKey = KeyCode.Mouse0; // 左键
 
+    public Transform startPlace;
+
     void Update()
     {
         // 按下按键时才发射射线
@@ -28,8 +30,7 @@ public class AndsonCentralRaySpawner : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Scene current = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(current.name);
+            player.transform.position = startPlace.position;
         }
     }
 
