@@ -401,5 +401,25 @@ namespace StarterAssets
         {
             _canRotate = canRotate;
         }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (hit.gameObject.TryGetComponent<BubbleProjectile>(out BubbleProjectile bubble))
+            {
+                // Bounce off the bubble
+                // Using a high vertical velocity to simulate a bounce
+                // We use the JumpHeight formula but multiplied to give a "super bounce" feeling or just same as jump
+                _verticalVelocity = Mathf.Sqrt(JumpHeight * 3f * -2f * Gravity); 
+                
+                // Reset jump timeout so we can jump again immediately if needed (optional)
+                _jumpTimeoutDelta = JumpTimeout;
+                
+                // Update animator to jump state
+                if (_hasAnimator)
+                {
+                    _animator.SetBool(_animIDJump, true);
+                }
+            }
+        }
     }
 }
