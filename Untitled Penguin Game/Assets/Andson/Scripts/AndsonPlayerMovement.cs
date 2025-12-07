@@ -121,7 +121,7 @@ public class AndsonPlayerMovement : MonoBehaviour
             if (!StartScreenTexts.isPaused)
             {
                 //inputDelay += 0.008f;
-                Time.timeScale += 0.04F;
+                //Time.timeScale += 0.04F;
             }
         }
     }

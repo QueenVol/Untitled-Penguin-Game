@@ -36,6 +36,7 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             SceneManager.LoadScene("AndsonTestScene");
+            AndsonSoundSystem.instance.StopAllSounds();
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
