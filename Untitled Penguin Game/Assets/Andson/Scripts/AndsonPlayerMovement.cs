@@ -30,6 +30,24 @@ public class AndsonPlayerMovement : MonoBehaviour
     public GameObject tutorTalk;
     public GameObject endTalk;
 
+    // 一帧输入的快照
+    private struct InputSnapshot
+    {
+        public float time;        // 输入发生的时间
+        public float horizontal;  // 水平轴
+        public float vertical;    // 垂直轴
+        public bool jumpPressed;  // 这一帧有没有按下跳跃键（Space）
+    }
+
+    public static float inputDelay = 0f;
+
+
+    private Queue<InputSnapshot> inputQueue = new Queue<InputSnapshot>();
+
+    // 当前已经“延迟后生效”的输入值
+    private float delayedHorizontal;
+    private float delayedVertical;
+
 
     void Start()
     {
@@ -54,9 +72,17 @@ public class AndsonPlayerMovement : MonoBehaviour
             // 记住这帧的结果，下一帧用来对比
             wasGroundedLastFrame = isGrounded;
 
-            // --- Input ---
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
+            // ====== 1. 采样真实输入，压入队列（立即不生效） ======
+            float realHorizontal = Input.GetAxisRaw("Horizontal");
+            float realVertical = Input.GetAxisRaw("Vertical");
+            bool realJumpPressed = Input.GetKeyDown(KeyCode.Space);
+
+            EnqueueInput(realHorizontal, realVertical, realJumpPressed);
+
+            // ====== 2. 处理队列，找出已经延迟够久的输入并执行 ======
+            ProcessDelayedInputs();
+
+            // ====== 3. 用“延迟后的输入”来计算 moveDirection 和旋转 ======
 
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
@@ -66,17 +92,13 @@ public class AndsonPlayerMovement : MonoBehaviour
             camForward.Normalize();
             camRight.Normalize();
 
-            moveDirection = (camForward * vertical + camRight * horizontal).normalized;
+            // 注意这里用的是 delayedVertical / delayedHorizontal
+            moveDirection = (camForward * delayedVertical + camRight * delayedHorizontal).normalized;
 
             if (moveDirection.magnitude > 0.1f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-            {
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
 
             // ★ 展示爆炸中的特效
@@ -93,7 +115,17 @@ public class AndsonPlayerMovement : MonoBehaviour
                 movingEffect.SetActive(false);
             }
         }
+
+        if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
+        {
+            if (!StartScreenTexts.isPaused)
+            {
+                //inputDelay += 0.008f;
+                Time.timeScale += 0.04F;
+            }
+        }
     }
+
 
     void FixedUpdate()
     {
@@ -110,6 +142,10 @@ public class AndsonPlayerMovement : MonoBehaviour
         if (other.CompareTag("Void"))
         {
             this.transform.position = startPlace.position;
+            inputQueue.Clear();
+            delayedHorizontal = 0f;
+            delayedVertical = 0f;
+            moveDirection = Vector3.zero;
         }
 
         if (other.CompareTag("Tutor"))
@@ -159,6 +195,46 @@ public class AndsonPlayerMovement : MonoBehaviour
         if (other.CompareTag("End"))
         {
             endTalk.SetActive(false);
+        }
+    }
+
+    void EnqueueInput(float horizontal, float vertical, bool jumpPressed)
+    {
+        InputSnapshot snapshot = new InputSnapshot
+        {
+            time = Time.time,
+            horizontal = horizontal,
+            vertical = vertical,
+            jumpPressed = jumpPressed
+        };
+        inputQueue.Enqueue(snapshot);
+    }
+
+    void ProcessDelayedInputs()
+    {
+        // 把队列里“已经超过 delay 时间”的输入拿出来依次执行
+        while (inputQueue.Count > 0)
+        {
+            var snap = inputQueue.Peek();
+            if (Time.time - snap.time >= inputDelay)
+            {
+                // 这个输入现在才“生效”
+                delayedHorizontal = snap.horizontal;
+                delayedVertical = snap.vertical;
+
+                // 跳跃：在延迟之后才真正触发 AddForce
+                if (snap.jumpPressed && isGrounded)
+                {
+                    rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                }
+
+                inputQueue.Dequeue();
+            }
+            else
+            {
+                // 队首还没到时间，后面的就更不可能到时间了
+                break;
+            }
         }
     }
 }
