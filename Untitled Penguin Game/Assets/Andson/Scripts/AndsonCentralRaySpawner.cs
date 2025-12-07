@@ -20,19 +20,59 @@ public class AndsonCentralRaySpawner : MonoBehaviour
 
     public Transform startPlace;
 
+    private struct InputEvent
+    {
+        public float time;           // 输入发生的时间
+        public System.Action action; // 延迟后要执行的逻辑
+    }
+
+    private Queue<InputEvent> inputQueue = new Queue<InputEvent>();
+
     void Update()
     {
-        // 按下按键时才发射射线
         if (Input.GetKeyDown(fireKey))
         {
-            FireRayFromCenter();
+            EnqueueAction(FireRayFromCenter);
         }
+
+        ProcessDelayedInputs();
+
+
 
         if (Input.GetKeyDown(KeyCode.R))
         {
             player.transform.position = startPlace.position;
         }
     }
+
+    void EnqueueAction(System.Action action)
+    {
+        inputQueue.Enqueue(new InputEvent
+        {
+            time = Time.time,
+            action = action
+        });
+    }
+
+    void ProcessDelayedInputs()
+    {
+        while (inputQueue.Count > 0)
+        {
+            var evt = inputQueue.Peek();
+            // 到时间了才执行
+            if (Time.time - evt.time >= AndsonPlayerMovement.inputDelay)
+            {
+                evt.action?.Invoke();
+                inputQueue.Dequeue();
+            }
+            else
+            {
+                // 队首都没到时间，后面的也不可能到
+                break;
+            }
+        }
+    }
+
 
     void FireRayFromCenter()
     {

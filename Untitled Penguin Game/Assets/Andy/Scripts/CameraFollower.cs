@@ -10,6 +10,7 @@ public class CameraFollower : MonoBehaviour
     public float xMin = 0f;
     public float xMax = 100f;
     public float yMin = -10f;
+    public float yMax = -10f;
 
     private Vector3 velocity = Vector3.zero;
 
@@ -20,7 +21,7 @@ public class CameraFollower : MonoBehaviour
         Vector3 targetPos = target.position + cameraOffset;
 
         float clampedX = Mathf.Clamp(targetPos.x, xMin, xMax);
-        float clampedY = Mathf.Max(targetPos.y, yMin);
+        float clampedY = Mathf.Clamp(targetPos.y, yMin, yMax);
         Vector3 clampedPos = new Vector3(clampedX, clampedY, targetPos.z);
 
         Vector3 smoothPos = Vector3.SmoothDamp(transform.position, clampedPos, ref velocity, followSpeed * Time.fixedDeltaTime);
