@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 47881940}
   - component: {fileID: 47881939}
   - component: {fileID: 47881938}
+  - component: {fileID: 47881942}
   m_Layer: 5
   m_Name: EggSpwaner
   m_TagString: Untagged
@@ -356,6 +357,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &47881942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47881937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 499cc977ba879ad4793fed373c66c19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disturbPrefab: {fileID: 5168483240458946294, guid: e2d6c880f2a629041a61dedec2340607, type: 3}
+  canvas: {fileID: 47881940}
+  maxCount: 40
+  nextSceneName: 
 --- !u!1 &49377040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5955,7 +5972,6 @@ GameObject:
   - component: {fileID: 1213697417}
   - component: {fileID: 1213697418}
   - component: {fileID: 1213697419}
-  - component: {fileID: 1213697420}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6121,22 +6137,6 @@ MonoBehaviour:
   player: {fileID: 1543316690}
   fireKey: 323
   startPlace: {fileID: 1305967305}
---- !u!114 &1213697420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1213697413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 499cc977ba879ad4793fed373c66c19e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  disturbPrefab: {fileID: 5168483240458946294, guid: e2d6c880f2a629041a61dedec2340607, type: 3}
-  canvas: {fileID: 47881940}
-  maxCount: 40
-  nextSceneName: 
 --- !u!1001 &1215186014
 PrefabInstance:
   m_ObjectHideFlags: 0
