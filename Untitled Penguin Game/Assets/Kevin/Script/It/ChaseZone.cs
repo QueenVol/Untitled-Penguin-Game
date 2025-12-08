@@ -15,14 +15,28 @@ public class ChaseZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             MusicManager.Instance.PlayChaseMusic();
-            
+
             if (spawnedEnemy == null)
             {
-                spawnedEnemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
+                Vector3 spawnPos = spawnPoint.position;
+
+                string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+                string enemyKey = sceneName + "_Enemy";
+
+                if (PlayerPrefs.HasKey(enemyKey + "_x"))
+                {
+                    float x = PlayerPrefs.GetFloat(enemyKey + "_x");
+                    float y = PlayerPrefs.GetFloat(enemyKey + "_y");
+                    spawnPos = new Vector3(x, y, 0);
+                }
+
+                spawnedEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
 
                 EnemyChase chase = spawnedEnemy.GetComponent<EnemyChase>();
                 chase.target = player;
                 chase.isChasing = true;
+
+                CatchPlayer.canCatchPlayer = true;
             }
         }
     }
@@ -37,6 +51,8 @@ public class ChaseZone : MonoBehaviour
             }
 
             MusicManager.Instance.PlayNormalMusic();
+
+            CatchPlayer.canCatchPlayer = false;
         }
     }
 }
