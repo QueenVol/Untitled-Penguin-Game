@@ -85,6 +85,8 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
         }
 
         AndsonSoundSystem.instance.StopAllSounds();
+        Time.timeScale = 1;
+        AndsonPlayerMovement.inputDelay = 0f;
 
         int randomer = Random.Range(0, 3);
 

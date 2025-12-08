@@ -49,31 +49,28 @@ public class EggSpawner : MonoBehaviour
 
     void Update()
     {
-        if (SceneManager.GetActiveScene().name != "AndsonScene")
+        if (SceneManager.GetActiveScene().name == "Andy")
         {
             if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
             {
-
                 TriggerDisturb();
-
-
-
             }
         }
         else if (SceneManager.GetActiveScene().name == "AndsonScene")
         {
             if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
             {
-
                 AndsonTriggerDisturb();
-
-
-
             }
         }
 
-       
-
+        else if (SceneManager.GetActiveScene().name == "KevinMainScene")
+        {
+            if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
+            {
+                YaTriggerDisturb();
+            }
+        }
     }
 
     void TriggerDisturb()
@@ -93,7 +90,8 @@ public class EggSpawner : MonoBehaviour
         if (currentCount >= maxCount)
         {
             saveload.SavePlayer();
-            nextRandomScene = Random.Range(0, 2);
+            nextRandomScene = Random.Range(1, 4);
+            Time.timeScale = 1;
             SceneManager.LoadScene(nextRandomScene);
         }
 
@@ -124,9 +122,34 @@ public class EggSpawner : MonoBehaviour
 
         
     }
+
+    void YaTriggerDisturb()
+    {
+        currentCount++;
+
+        if (finalDisturbMode == 0)
+            SpawnRandomUI();
+        else if (finalDisturbMode == 1)
+            StartCoroutine(CameraShake());
+        else if (finalDisturbMode == 2)
+            IncreaseFadeImage();
+        else if (finalDisturbMode == 3)
+            IncreaseGameSpeed();
+
+
+        if (currentCount >= maxCount)
+        {
+            nextRandomScene = Random.Range(1, 4);
+            Time.timeScale = 1;
+            SceneManager.LoadScene(nextRandomScene);
+        }
+
+
+    }
+
     void IncreaseGameSpeed()
     {
-         Time.timeScale += 0.04F;
+         Time.timeScale += 0.1F;
 
     }
 
@@ -134,7 +157,7 @@ public class EggSpawner : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "AndsonScene")
         {
-            AndsonPlayerMovement.inputDelay += 0.008f;
+            AndsonPlayerMovement.inputDelay += 0.015f;
         }
     }
     void SpawnRandomUI()
