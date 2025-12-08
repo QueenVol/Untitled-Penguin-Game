@@ -22,11 +22,12 @@ public class ThirdPlayerShooter : MonoBehaviour
     [SerializeField] private Transform _debugTransform;
     [SerializeField] private Animator _animator;
     [SerializeField] private float _sensitivity_additive = 0.0f;
-    [SerializeField] private float _sensitivityIncreaseRate = 0.1f;
+    [SerializeField] private float _sensitivityIncreaseRate = 0.0f;
 
     [Header("Scene Transition Settings")]
     [SerializeField] private float _sensitivityThreshold = 40.0f;
     [SerializeField] private List<string> _randomScenes;
+    public bool disturbThresholdReached = false;
 
     private void Awake()
     {
@@ -37,14 +38,8 @@ public class ThirdPlayerShooter : MonoBehaviour
         
         LoadSceneState();
     }
-
-    private void Update()
-    {
-        _sensitivity_additive += _sensitivityIncreaseRate * Time.deltaTime;
-
-        if (_sensitivity_additive >= _sensitivityThreshold)
-        {
-            if (_randomScenes != null && _randomScenes.Count > 0)
+    void changeScene(){
+        if (_randomScenes != null && _randomScenes.Count > 0)
             {
                 List<string> availableScenes = new List<string>();
 
@@ -74,6 +69,14 @@ public class ThirdPlayerShooter : MonoBehaviour
                 SceneManager.LoadScene(sceneToLoad);
                 return;
             }
+    }
+    private void Update()
+    {
+        _sensitivity_additive += _sensitivityIncreaseRate * Time.deltaTime;
+
+        if (_sensitivity_additive >= _sensitivityThreshold || disturbThresholdReached)
+        {
+            changeScene();
         }
 
         Vector3 mousePosition = Vector3.zero;
@@ -207,12 +210,17 @@ public class ThirdPlayerShooter : MonoBehaviour
         }
     }
 
+    public void IncreaseSensitivity(float amount)
+    {
+        _sensitivityIncreaseRate = amount;
+    }
+
     private bool IsSceneFinished(string sceneName)
     {
         
-        if (sceneName == "AndsonScene") return AndsonAcrossSceneSaver.AndsonHasFinished;
-        if (sceneName == "KevinMainScene") return KevinIsFinished.kevinIsFinished;
-        if (sceneName == "Andy") return PlayerController.StupidAndyFinished;
+        //if (sceneName == "AndsonScene") return AndsonAcrossSceneSaver.AndsonHasFinished;
+        //if (sceneName == "KevinMainScene") return KevinIsFinished.kevinIsFinished;
+        //if (sceneName == "Andy") return PlayerController.stupidAndyFinished;
 
         return false;
     }

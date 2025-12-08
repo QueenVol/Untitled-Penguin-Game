@@ -22,6 +22,11 @@ public class EndGameCheckpoint : MonoBehaviour
         {
             _hasTriggered = true;
             GameManager.Instance.WinGame();
+            ThirdPlayerShooter thirdPlayerShooter = FindObjectOfType<ThirdPlayerShooter>();
+            if (thirdPlayerShooter != null)
+            {
+                thirdPlayerShooter.disturbThresholdReached = true;
+            }
             PlayWinEffect();
             
             if (beaconVisual != null)

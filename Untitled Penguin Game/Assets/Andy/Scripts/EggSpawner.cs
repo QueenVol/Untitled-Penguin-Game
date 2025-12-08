@@ -27,6 +27,7 @@ public class EggSpawner : MonoBehaviour
 
     private int finalDisturbMode;
     private int andsonFinalDisturbMode;
+    private int marcusFinalDisturbMode;
     private int nextRandomScene;
 
     public AndsonCameraFollow cameraFollow;
@@ -37,6 +38,7 @@ public class EggSpawner : MonoBehaviour
     {
         finalDisturbMode = Random.Range(0, 4);
         andsonFinalDisturbMode = Random.Range(0, 5);
+        marcusFinalDisturbMode = Random.Range(0, 5);
         Debug.Log("Selected Disturb Mode = " + finalDisturbMode);
 
         if (fadeImage != null)
@@ -70,6 +72,36 @@ public class EggSpawner : MonoBehaviour
             {
                 YaTriggerDisturb();
             }
+        }else if (SceneManager.GetActiveScene().name == "Playground 1")
+        {
+            if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
+            {
+                MarcusTriggerDisturb();
+            }
+        }
+    }
+
+    void MarcusTriggerDisturb()
+    {
+        currentCount++;
+        if (marcusFinalDisturbMode == 0)
+            SpawnRandomUI();
+        else if (marcusFinalDisturbMode == 1)
+            StartCoroutine(CameraShake());
+        else if (marcusFinalDisturbMode == 2)
+            IncreaseFadeImage();
+        else if (marcusFinalDisturbMode == 3)
+            IncreaseGameSpeed();
+        else if (marcusFinalDisturbMode == 4)
+            IncreaseMouseSensitivity();
+
+        if (currentCount >= maxCount)
+        {
+            ThirdPlayerShooter thirdPlayerShooter = FindObjectOfType<ThirdPlayerShooter>();
+            if (thirdPlayerShooter != null)
+            {
+                thirdPlayerShooter.disturbThresholdReached = true;
+            }
         }
     }
 
@@ -85,8 +117,7 @@ public class EggSpawner : MonoBehaviour
             IncreaseFadeImage();
         else if (finalDisturbMode == 3)
             IncreaseGameSpeed();
-
-
+            
         if (currentCount >= maxCount)
         {
             saveload.SavePlayer();
@@ -135,7 +166,7 @@ public class EggSpawner : MonoBehaviour
             IncreaseFadeImage();
         else if (finalDisturbMode == 3)
             IncreaseGameSpeed();
-
+       
 
         if (currentCount >= maxCount)
         {
@@ -158,6 +189,16 @@ public class EggSpawner : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "AndsonScene")
         {
             AndsonPlayerMovement.inputDelay += 0.015f;
+        }
+    }
+
+    void IncreaseMouseSensitivity()
+    {
+        // Assuming ThirdPlayerShooter has a static instance or we find it
+        ThirdPlayerShooter shooter = FindObjectOfType<ThirdPlayerShooter>();
+        if (shooter != null)
+        {
+            shooter.IncreaseSensitivity(3f);
         }
     }
     void SpawnRandomUI()
@@ -203,9 +244,9 @@ public class EggSpawner : MonoBehaviour
     void IncreaseFadeImage()
     {
         if (fadeImage == null) return;
-        if (maxCount == 0) return;   // 防止除 0
+        if (maxCount == 0) return;   // ????? 0
 
-        // 得到 0~1 的比例
+        // ??? 0~1 ?????
         float alpha = (float)currentCount / maxCount;
         alpha = Mathf.Clamp01(alpha);
 
