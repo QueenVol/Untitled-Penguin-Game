@@ -30,6 +30,8 @@ public class AndsonPlayerMovement : MonoBehaviour
     public GameObject tutorTalk;
     public GameObject endTalk;
 
+    public AndsonAcrossSceneSaver sceneManager;
+
     // 一帧输入的快照
     private struct InputSnapshot
     {
@@ -128,6 +130,13 @@ public class AndsonPlayerMovement : MonoBehaviour
         rb.velocity = velocity;
     }
 
+    private IEnumerator LoadAfter3Seconds()
+    {
+        yield return new WaitForSeconds(3f);
+        AndsonAcrossSceneSaver.AndsonHasFinished = true;
+        sceneManager.LoadAnotherRandomScene();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         // 如果你不想对某些东西触发，可以检查 Tag
@@ -148,6 +157,7 @@ public class AndsonPlayerMovement : MonoBehaviour
         if (other.CompareTag("End"))
         {
             endTalk.SetActive(true);
+            StartCoroutine(LoadAfter3Seconds());
         }
 
         if (!other.CompareTag("Fire")) return;

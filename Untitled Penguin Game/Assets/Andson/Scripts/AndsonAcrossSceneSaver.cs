@@ -9,6 +9,8 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
     public EggSpawner spawner;
     public Vector3 playerPosition;
 
+    public static bool AndsonHasFinished = false;
+
     private bool hasSavedPlayerPosition = false;  // 是否已经有保存的位置
 
     void Awake()
@@ -64,35 +66,40 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
         {
             if (spawner != null && spawner.currentCount >= spawner.maxCount)
             {
-                // 切走之前，保存玩家位置
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
-                {
-                    playerPosition = player.transform.position;
-                    hasSavedPlayerPosition = true;
-                }
-
-                AndsonSoundSystem.instance.StopAllSounds();
-
-                int randomer = Random.Range(0, 3);
-
-                if (randomer == 0)
-                {
-                    SceneManager.LoadScene("Andy");
-                }
-                else if (randomer == 1)
-                {
-                    SceneManager.LoadScene("KevinMainScene");
-                }
-                else
-                {
-                    SceneManager.LoadScene("Andy");
-                }
+                LoadAnotherRandomScene();
             }
         }
 
         // 先判断 spawner 是否存在，避免在其他场景里报 NullReference
        
+    }
+
+    public void LoadAnotherRandomScene()
+    {
+        // 切走之前，保存玩家位置
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerPosition = player.transform.position;
+            hasSavedPlayerPosition = true;
+        }
+
+        AndsonSoundSystem.instance.StopAllSounds();
+
+        int randomer = Random.Range(0, 3);
+
+        if (randomer == 0)
+        {
+            SceneManager.LoadScene("Andy");
+        }
+        else if (randomer == 1)
+        {
+            SceneManager.LoadScene("KevinMainScene");
+        }
+        else
+        {
+            SceneManager.LoadScene("Andy");
+        }
     }
 
     private IEnumerator SetPlayerPosNextFrame()
