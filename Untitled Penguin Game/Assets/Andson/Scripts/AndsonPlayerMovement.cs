@@ -132,7 +132,7 @@ public class AndsonPlayerMovement : MonoBehaviour
 
     private IEnumerator LoadAfter3Seconds()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         AndsonAcrossSceneSaver.AndsonHasFinished = true;
         sceneManager.LoadAnotherRandomScene();
     }

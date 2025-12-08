@@ -124,12 +124,16 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
             }
         }
 
-        // 随机挑选
-        int index = Random.Range(0, scenePool.Count);
-        string targetScene = scenePool[index];
+        if (scenePool.Count != 0)
+        {
+            // 随机挑选
+            int index = Random.Range(0, scenePool.Count);
+            string targetScene = scenePool[index];
 
-        Debug.Log("切换到 Scene：" + targetScene);
-        SceneManager.LoadScene(targetScene);
+            Debug.Log("切换到 Scene：" + targetScene);
+            SceneManager.LoadScene(targetScene);
+        }
+        
     }
     private IEnumerator SetPlayerPosNextFrame()
     {
@@ -160,5 +164,6 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
         {
             SceneManager.LoadScene("EndScene");
         }
+        
     }
 }

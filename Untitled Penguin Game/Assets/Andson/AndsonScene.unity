@@ -4669,8 +4669,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: I AM SORRY, YOU CAN NEVER GET OUT OF THIS PLACE BECAUSE THIS IS YOUR HOME,
-    THE EARTH.
+  m_text: I AM SORRY, THIS IS THE END. YOU CAN NEVER GET OUT OF THIS PLACE BECAUSE
+    THIS IS YOUR HOME, THE EARTH.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7769,8 +7769,8 @@ MonoBehaviour:
   staticSprite: {fileID: 657560039}
   movingSprite: {fileID: 2141766304}
   movingEffect: {fileID: 1793507581}
-  explosionForce: 25
-  upwardForce: 18
+  explosionForce: 27.5
+  upwardForce: 20
   startPlace: {fileID: 1305967305}
   isGrounded: 0
   isBlownUp: 0
