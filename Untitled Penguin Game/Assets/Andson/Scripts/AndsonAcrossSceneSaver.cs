@@ -109,7 +109,7 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
             scenePool.Add("Andy");
 
         if (!GameManager.isGameWon)
-            scenePool.Add("Playground 1");   // 举例（如果你有第三个场景的话）
+            scenePool.Add("Playground 1");   
 
         // 如果列表为空 → 全部完成
         if (scenePool.Count == 0)

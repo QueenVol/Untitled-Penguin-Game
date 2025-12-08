@@ -7762,15 +7762,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af8d1e0c6684c814582441a2705dcec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 8
+  moveSpeed: 10
   rotationSpeed: 10
   jumpForce: 5
   cameraTransform: {fileID: 263619480}
   staticSprite: {fileID: 657560039}
   movingSprite: {fileID: 2141766304}
   movingEffect: {fileID: 1793507581}
-  explosionForce: 20
-  upwardForce: 12.5
+  explosionForce: 25
+  upwardForce: 18
   startPlace: {fileID: 1305967305}
   isGrounded: 0
   isBlownUp: 0
