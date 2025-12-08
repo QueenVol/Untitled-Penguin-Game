@@ -155,6 +155,14 @@ public class PlayerController : MonoBehaviour
         {
             message.SetActive(true);
         }
+        if (collision.gameObject.tag == "Music3")
+        {
+            levelMusic3.SetActive(true);
+            Destroy(musicTrigger3);
+            penguin.SetActive(false);
+            StupidAndyFinished = true;
+            StartCoroutine(SetFinishedAfterDelay(10f));
+        }
     }
     void OnTriggerExit2D(Collider2D collision)
     {
@@ -179,14 +187,6 @@ public class PlayerController : MonoBehaviour
                 Destroy(musicTrigger2);
                 m2played = true;
             }
-        }
-        if (collision.gameObject.tag == "Music3")
-        {
-            levelMusic3.SetActive(true);
-            Destroy(musicTrigger3);
-            penguin.SetActive(false);
-            StupidAndyFinished = true;
-            StartCoroutine(SetFinishedAfterDelay(10f));
         }
         if (collision.gameObject.tag == "Grave")
         {

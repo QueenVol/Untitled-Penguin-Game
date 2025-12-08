@@ -59527,6 +59527,7 @@ MonoBehaviour:
   audio: {fileID: 1622606471}
   eggCrack: {fileID: 8300000, guid: dc39b1f70e366914c9e38311016f1c02, type: 3}
   saveLoad: {fileID: 843340138}
+  eggSpawner: {fileID: 767469799}
 --- !u!61 &1622606469
 BoxCollider2D:
   m_ObjectHideFlags: 0
