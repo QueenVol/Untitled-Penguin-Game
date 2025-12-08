@@ -1,4 +1,4 @@
-﻿ using UnityEngine;
+ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -27,6 +27,7 @@ namespace StarterAssets
 
         [Tooltip("Acceleration and deceleration")]
         public float SpeedChangeRate = 10.0f;
+        public float Sensitivity = 1.0f;
 
         public AudioClip LandingAudioClip;
         public AudioClip[] FootstepAudioClips;
@@ -75,6 +76,8 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        public bool CanRotate = true;
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -97,6 +100,7 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        private bool _canRotate = true; 
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -122,6 +126,10 @@ namespace StarterAssets
             }
         }
 
+        [Header("Respawn")]
+        public Transform SpawnPoint;
+        private Vector3 _startPosition;
+
 
         private void Awake()
         {
@@ -134,6 +142,7 @@ namespace StarterAssets
 
         private void Start()
         {
+            _startPosition = transform.position;
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
@@ -198,8 +207,8 @@ namespace StarterAssets
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier * Sensitivity;
+                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier * Sensitivity;
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -260,8 +269,9 @@ namespace StarterAssets
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 
-                // rotate to face input direction relative to camera position
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                if (_canRotate) {
+                    transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                }
             }
 
 
@@ -386,6 +396,63 @@ namespace StarterAssets
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+            }
+        }
+        public void SetSensitivity(float sensitivity)
+        {
+            Sensitivity = sensitivity;
+        }
+        public void SetCanRotate(bool canRotate)
+        {
+            _canRotate = canRotate;
+        }
+
+        public void Respawn()
+        {
+            // Disable controller to move transform directly
+            _controller.enabled = false;
+            
+            if (SpawnPoint != null)
+            {
+                transform.position = SpawnPoint.position;
+                transform.rotation = SpawnPoint.rotation;
+            }
+            else
+            {
+                transform.position = _startPosition;
+            }
+
+            // Reset velocities
+            _verticalVelocity = 0f;
+            _speed = 0f;
+            
+            // Re-enable controller
+            _controller.enabled = true;
+        }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (hit.gameObject.TryGetComponent<BubbleProjectile>(out BubbleProjectile bubble))
+            {
+                // Only bounce if the bubble is stuck
+                if (!bubble.IsStuck) return;
+
+                // Bounce off the bubble
+                // Using a high vertical velocity to simulate a bounce
+                // We use the JumpHeight formula but multiplied to give a "super bounce" feeling or just same as jump
+                _verticalVelocity = Mathf.Sqrt(JumpHeight * 3f * -2f * Gravity); 
+                
+                // Reset jump timeout so we can jump again immediately if needed (optional)
+                _jumpTimeoutDelta = JumpTimeout;
+          
+                // Update animator to jump state
+                if (_hasAnimator)
+                {
+                    _animator.SetBool(_animIDJump, true);
+                }
+                
+                // Destroy the bubble after bouncing
+                bubble.Pop();
             }
         }
     }

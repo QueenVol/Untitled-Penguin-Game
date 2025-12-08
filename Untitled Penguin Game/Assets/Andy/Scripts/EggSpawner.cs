@@ -22,14 +22,21 @@ public class EggSpawner : MonoBehaviour
     public int maxCount = 18;
     public string nextSceneName;
 
-    private int currentCount = 0;
+    public int currentCount = 0;
     private bool keyPreviouslyDown = false;
 
     private int finalDisturbMode;
+    private int andsonFinalDisturbMode;
+    private int nextRandomScene;
+
+    public AndsonCameraFollow cameraFollow;
+
+    public SaveLoad saveload;
 
     void Start()
     {
-        finalDisturbMode = Random.Range(0, 3);
+        finalDisturbMode = Random.Range(0, 4);
+        andsonFinalDisturbMode = Random.Range(0, 5);
         Debug.Log("Selected Disturb Mode = " + finalDisturbMode);
 
         if (fadeImage != null)
@@ -42,20 +49,31 @@ public class EggSpawner : MonoBehaviour
 
     void Update()
     {
-        bool keyDown =
-            Input.GetKey(KeyCode.A) ||
-            Input.GetKey(KeyCode.D) ||
-            Input.GetKey(KeyCode.W) ||
-            Input.GetKey(KeyCode.Space) ||
-            Input.GetKey(KeyCode.LeftArrow) ||
-            Input.GetKey(KeyCode.RightArrow);
-
-        if (keyDown && !keyPreviouslyDown)
+        if (SceneManager.GetActiveScene().name != "AndsonScene")
         {
-            TriggerDisturb();
+            if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
+            {
+
+                TriggerDisturb();
+
+
+
+            }
+        }
+        else if (SceneManager.GetActiveScene().name == "AndsonScene")
+        {
+            if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
+            {
+
+                AndsonTriggerDisturb();
+
+
+
+            }
         }
 
-        keyPreviouslyDown = keyDown;
+       
+
     }
 
     void TriggerDisturb()
@@ -66,15 +84,59 @@ public class EggSpawner : MonoBehaviour
             SpawnRandomUI();
         else if (finalDisturbMode == 1)
             StartCoroutine(CameraShake());
-        else
+        else if (finalDisturbMode == 2)
             IncreaseFadeImage();
+        else if (finalDisturbMode == 3)
+            IncreaseGameSpeed();
+
 
         if (currentCount >= maxCount)
         {
-            //SceneManager.LoadScene(nextSceneName);
+            saveload.SavePlayer();
+            nextRandomScene = Random.Range(0, 2);
+            SceneManager.LoadScene(nextRandomScene);
         }
+
     }
 
+
+    void AndsonTriggerDisturb()
+    {
+        currentCount++;
+        if (!StartScreenTexts.isPaused)
+        {
+            if (andsonFinalDisturbMode == 0)
+                SpawnRandomUI();
+            else if (andsonFinalDisturbMode == 1)
+                cameraFollow.StartShake(currentCount, baseShakeMagnitude/5, baseShakeDuration/5);
+            else if (andsonFinalDisturbMode == 2)
+                IncreaseFadeImage();
+            else if (andsonFinalDisturbMode == 3)
+                IncreaseInputDelay();
+            else
+                IncreaseGameSpeed();
+
+            if (currentCount >= maxCount)
+            {
+                //SceneManager.LoadScene(nextSceneName);
+            }
+        }
+
+        
+    }
+    void IncreaseGameSpeed()
+    {
+         Time.timeScale += 0.04F;
+
+    }
+
+    void IncreaseInputDelay()
+    {
+        if (SceneManager.GetActiveScene().name == "AndsonScene")
+        {
+            AndsonPlayerMovement.inputDelay += 0.008f;
+        }
+    }
     void SpawnRandomUI()
     {
         GameObject obj = Instantiate(disturbPrefab, canvas.transform);
@@ -113,15 +175,19 @@ public class EggSpawner : MonoBehaviour
         cameraToShake.transform.localPosition = originalPos;
     }
 
+  
+
     void IncreaseFadeImage()
     {
         if (fadeImage == null) return;
+        if (maxCount == 0) return;   // 防止除 0
 
-        fadeAlpha += 14f / 255f;
-        fadeAlpha = Mathf.Clamp01(fadeAlpha);
+        // 得到 0~1 的比例
+        float alpha = (float)currentCount / maxCount;
+        alpha = Mathf.Clamp01(alpha);
 
         Color c = fadeImage.color;
-        c.a = fadeAlpha;
+        c.a = alpha;
         fadeImage.color = c;
     }
 }

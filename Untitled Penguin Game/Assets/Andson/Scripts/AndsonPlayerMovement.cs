@@ -30,6 +30,8 @@ public class AndsonPlayerMovement : MonoBehaviour
     public GameObject tutorTalk;
     public GameObject endTalk;
 
+    public AndsonAcrossSceneSaver sceneManager;
+
     // 一帧输入的快照
     private struct InputSnapshot
     {
@@ -116,14 +118,7 @@ public class AndsonPlayerMovement : MonoBehaviour
             }
         }
 
-        if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
-        {
-            if (!StartScreenTexts.isPaused)
-            {
-                //inputDelay += 0.008f;
-                Time.timeScale += 0.04F;
-            }
-        }
+       
     }
 
 
@@ -133,6 +128,13 @@ public class AndsonPlayerMovement : MonoBehaviour
         Vector3 targetVelocity = moveDirection * moveSpeed;
         Vector3 velocity = new Vector3(targetVelocity.x, rb.velocity.y, targetVelocity.z);
         rb.velocity = velocity;
+    }
+
+    private IEnumerator LoadAfter3Seconds()
+    {
+        yield return new WaitForSeconds(3f);
+        AndsonAcrossSceneSaver.AndsonHasFinished = true;
+        sceneManager.LoadAnotherRandomScene();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -155,6 +157,7 @@ public class AndsonPlayerMovement : MonoBehaviour
         if (other.CompareTag("End"))
         {
             endTalk.SetActive(true);
+            StartCoroutine(LoadAfter3Seconds());
         }
 
         if (!other.CompareTag("Fire")) return;
