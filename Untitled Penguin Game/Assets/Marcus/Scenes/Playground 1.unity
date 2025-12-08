@@ -2059,7 +2059,7 @@ MonoBehaviour:
   _debugTransform: {fileID: 0}
   _animator: {fileID: 0}
   _sensitivity_additive: 0
-  _sensitivityIncreaseRate: 3
+  _sensitivityIncreaseRate: 0
   _sensitivityThreshold: 40
   _randomScenes:
   - AndsonScene

@@ -22,7 +22,7 @@ public class ThirdPlayerShooter : MonoBehaviour
     [SerializeField] private Transform _debugTransform;
     [SerializeField] private Animator _animator;
     [SerializeField] private float _sensitivity_additive = 0.0f;
-    [SerializeField] private float _sensitivityIncreaseRate = 0.1f;
+    [SerializeField] private float _sensitivityIncreaseRate = 0.0f;
 
     [Header("Scene Transition Settings")]
     [SerializeField] private float _sensitivityThreshold = 40.0f;
@@ -205,6 +205,11 @@ public class ThirdPlayerShooter : MonoBehaviour
             isBubbleMode = savedBubbleMode;
             Debug.Log($"Loaded state for {sceneName}");
         }
+    }
+
+    public void IncreaseSensitivity(float amount)
+    {
+        _sensitivityIncreaseRate = amount;
     }
 
     private bool IsSceneFinished(string sceneName)
