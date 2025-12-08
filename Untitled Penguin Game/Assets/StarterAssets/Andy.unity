@@ -29467,7 +29467,7 @@ MonoBehaviour:
   baseShakeMagnitude: 0.2
   baseShakeDuration: 0.1
   fadeImage: {fileID: 161532792}
-  maxCount: 18
+  maxCount: 26
   nextSceneName: 
   currentCount: 0
   cameraFollow: {fileID: 0}
