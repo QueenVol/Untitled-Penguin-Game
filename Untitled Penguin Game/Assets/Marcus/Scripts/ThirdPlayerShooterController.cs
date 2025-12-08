@@ -212,7 +212,7 @@ public class ThirdPlayerShooter : MonoBehaviour
         
         if (sceneName == "AndsonScene") return AndsonAcrossSceneSaver.AndsonHasFinished;
         if (sceneName == "KevinMainScene") return KevinIsFinished.kevinIsFinished;
-        if (sceneName == "Andy") return PlayerController.stupidAndyFinished;
+        if (sceneName == "Andy") return PlayerController.StupidAndyFinished;
 
         return false;
     }

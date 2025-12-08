@@ -30,7 +30,7 @@ public class AndsonCentralRaySpawner : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(fireKey))
+        if (Input.GetKeyDown(fireKey) && SceneManager.GetActiveScene().name == "AndsonScene")
         {
             EnqueueAction(FireRayFromCenter);
         }
