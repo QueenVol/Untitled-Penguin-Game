@@ -7676,6 +7676,7 @@ MonoBehaviour:
   isBlownUp: 0
   tutorTalk: {fileID: 1547970700}
   endTalk: {fileID: 977356710}
+  sceneManager: {fileID: 1813026962}
 --- !u!54 &1543316692
 Rigidbody:
   m_ObjectHideFlags: 0
