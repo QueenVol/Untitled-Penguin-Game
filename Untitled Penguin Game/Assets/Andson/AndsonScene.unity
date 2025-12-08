@@ -378,6 +378,7 @@ MonoBehaviour:
   fadeImage: {fileID: 956163736}
   maxCount: 40
   nextSceneName: 
+  currentCount: 0
   cameraFollow: {fileID: 263619481}
 --- !u!1 &49377040
 GameObject:
@@ -9043,6 +9044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 108d74a0c32243d4fabe308449de5db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawner: {fileID: 47881942}
   playerPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &1813026963
 Transform:

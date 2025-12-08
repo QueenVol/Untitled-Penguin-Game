@@ -22,7 +22,7 @@ public class EggSpawner : MonoBehaviour
     public int maxCount = 18;
     public string nextSceneName;
 
-    private int currentCount = 0;
+    public int currentCount = 0;
     private bool keyPreviouslyDown = false;
 
     private int finalDisturbMode;
@@ -33,7 +33,7 @@ public class EggSpawner : MonoBehaviour
     void Start()
     {
         finalDisturbMode = Random.Range(0, 4);
-        andsonFinalDisturbMode = Random.Range(0, 5);
+        andsonFinalDisturbMode =2;
         Debug.Log("Selected Disturb Mode = " + finalDisturbMode);
 
         if (fadeImage != null)
@@ -87,10 +87,7 @@ public class EggSpawner : MonoBehaviour
             IncreaseGameSpeed();
 
 
-        if (currentCount >= maxCount)
-        {
-            //SceneManager.LoadScene(nextSceneName);
-        }
+        
     }
 
 
@@ -174,12 +171,14 @@ public class EggSpawner : MonoBehaviour
     void IncreaseFadeImage()
     {
         if (fadeImage == null) return;
+        if (maxCount == 0) return;   // 防止除 0
 
-        fadeAlpha += 14f / 255f;
-        fadeAlpha = Mathf.Clamp01(fadeAlpha);
+        // 得到 0~1 的比例
+        float alpha = (float)currentCount / maxCount;
+        alpha = Mathf.Clamp01(alpha);
 
         Color c = fadeImage.color;
-        c.a = fadeAlpha;
+        c.a = alpha;
         fadeImage.color = c;
     }
 }
