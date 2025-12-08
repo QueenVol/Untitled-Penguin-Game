@@ -14,6 +14,14 @@ public class PlayerRespawn : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+    void Start()
+    {
+        if (SceneEnterRuntimeFlag.hasEnteredKevinMainScene)
+            return;
+
+        GetComponent<PlayerRespawn>()?.Respawn();
+    }
+
     public void Respawn()
     {
         if (spawnPoint == null)

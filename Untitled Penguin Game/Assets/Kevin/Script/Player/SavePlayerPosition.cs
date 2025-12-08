@@ -8,24 +8,24 @@ public class SavePlayerPosition : MonoBehaviour
     private string sceneName;
     private string keyX;
     private string keyY;
-    private string keyVisited;
 
     void Awake()
     {
         sceneName = SceneManager.GetActiveScene().name;
 
-        if (sceneName == "StartScene" || sceneName == "EndScene")
-        {
+        if (!sceneName.Contains("KevinMainScene"))
             return;
-        }
 
         keyX = "MYPLAYER_" + sceneName + "_x";
         keyY = "MYPLAYER_" + sceneName + "_y";
-        keyVisited = "MYPLAYER_" + sceneName + "_visited";
 
-        bool hasVisitedBefore = PlayerPrefs.GetInt(keyVisited, 0) == 1;
+        if (!SceneEnterRuntimeFlag.hasEnteredKevinMainScene)
+        {
+            SceneEnterRuntimeFlag.hasEnteredKevinMainScene = true;
+            return;
+        }
 
-        if (hasVisitedBefore && PlayerPrefs.HasKey(keyX))
+        if (PlayerPrefs.HasKey(keyX))
         {
             float x = PlayerPrefs.GetFloat(keyX);
             float y = PlayerPrefs.GetFloat(keyY);
@@ -37,17 +37,14 @@ public class SavePlayerPosition : MonoBehaviour
     {
         sceneName = SceneManager.GetActiveScene().name;
 
-        if (sceneName == "StartScene" || sceneName == "EndScene")
+        if (!sceneName.Contains("KevinMainScene"))
             return;
 
         keyX = "MYPLAYER_" + sceneName + "_x";
         keyY = "MYPLAYER_" + sceneName + "_y";
-        keyVisited = "MYPLAYER_" + sceneName + "_visited";
 
         PlayerPrefs.SetFloat(keyX, transform.position.x);
         PlayerPrefs.SetFloat(keyY, transform.position.y);
-        PlayerPrefs.SetInt(keyVisited, 1);
-
         PlayerPrefs.Save();
     }
 }
