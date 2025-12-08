@@ -380,6 +380,7 @@ MonoBehaviour:
   nextSceneName: 
   currentCount: 0
   cameraFollow: {fileID: 263619481}
+  saveload: {fileID: 0}
 --- !u!1 &49377040
 GameObject:
   m_ObjectHideFlags: 0
@@ -3122,6 +3123,7 @@ GameObject:
   m_Component:
   - component: {fileID: 455848658}
   - component: {fileID: 455848657}
+  - component: {fileID: 455848659}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -3206,6 +3208,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &455848659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455848656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &456099199 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8098169881513260187, guid: 5793dffd6b279e44b8983795833fb893, type: 3}
@@ -4119,15 +4144,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2774220344278030320, guid: 664f42e3e517e1e4881a3319cefb5700, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -139.9
+      value: -139.08
       objectReference: {fileID: 0}
     - target: {fileID: 2774220344278030320, guid: 664f42e3e517e1e4881a3319cefb5700, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 260.97
+      value: 253.93
       objectReference: {fileID: 0}
     - target: {fileID: 2774220344278030320, guid: 664f42e3e517e1e4881a3319cefb5700, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 26.25
+      value: 30.930002
       objectReference: {fileID: 0}
     - target: {fileID: 2774220344278030320, guid: 664f42e3e517e1e4881a3319cefb5700, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7642,7 +7667,7 @@ Transform:
   m_GameObject: {fileID: 1543316686}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.55, y: 9.21, z: 75.7}
+  m_LocalPosition: {x: -93.24, y: 273.06, z: 57.44}
   m_LocalScale: {x: 1, y: 0.85, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9416,7 +9441,7 @@ Transform:
   m_GameObject: {fileID: 1914322655}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0021184508, y: -0.8917616, z: 0.00039290407, w: 0.45250043}
-  m_LocalPosition: {x: -132.2, y: 261.85, z: 28.9}
+  m_LocalPosition: {x: -131.38, y: 254.81, z: 33.58}
   m_LocalScale: {x: 40.895134, y: 11, z: 22.227093}
   m_ConstrainProportionsScale: 0
   m_Children: []
