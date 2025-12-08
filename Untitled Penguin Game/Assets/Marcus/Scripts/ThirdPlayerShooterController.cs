@@ -38,7 +38,7 @@ public class ThirdPlayerShooter : MonoBehaviour
         
         LoadSceneState();
     }
-    void changeScene(){
+    public void changeScene(){
         if (_randomScenes != null && _randomScenes.Count > 0)
             {
                 List<string> availableScenes = new List<string>();
@@ -214,13 +214,45 @@ public class ThirdPlayerShooter : MonoBehaviour
     {
         _sensitivityIncreaseRate = amount;
     }
+    /*public void LoadRandomSceneBasedOnBools()
+    {
+        List<string> scenePool = new List<string>();
 
+        // 只要对应的 bool == false，就加入随机列表
+        if (!KevinIsFinished.kevinIsFinished)
+            scenePool.Add("KevinMainScene");
+
+        if (!PlayerController.StupidAndyFinished)
+            scenePool.Add("Andy");
+
+        if (!AndsonAcrossSceneSaver.AndsonHasFinished)
+            scenePool.Add("AndsonScene");   
+
+        // 如果列表为空 → 全部完成
+        if (scenePool.Count == 0)
+        {
+            if (!GameManager.isGameWon)
+            {
+                SceneManager.LoadScene("Playground 1");
+            }
+            else
+            {
+            
+            }
+        }
+
+        // 随机挑选
+        int index = Random.Range(0, scenePool.Count);
+        string targetScene = scenePool[index];
+
+        Debug.Log("切换到 Scene：" + targetScene);
+        SceneManager.LoadScene(targetScene);
+    }*/
     private bool IsSceneFinished(string sceneName)
     {
-        
-        //if (sceneName == "AndsonScene") return AndsonAcrossSceneSaver.AndsonHasFinished;
-        //if (sceneName == "KevinMainScene") return KevinIsFinished.kevinIsFinished;
-        //if (sceneName == "Andy") return PlayerController.stupidAndyFinished;
+        if (sceneName == "AndsonScene") return AndsonAcrossSceneSaver.AndsonHasFinished;
+        if (sceneName == "KevinMainScene") return KevinIsFinished.kevinIsFinished;
+        if (sceneName == "Andy") return PlayerController.StupidAndyFinished;
 
         return false;
     }
