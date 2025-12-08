@@ -20,15 +20,21 @@ public class ThirdPlayerShooter : MonoBehaviour
     [SerializeField] private LayerMask aimColliderLayer = new LayerMask();
     [SerializeField] private Transform _debugTransform;
     [SerializeField] private Animator _animator;
+    [SerializeField] private float _sensitivity_additive = 0.0f;
+    [SerializeField] private float _sensitivityIncreaseRate = 0.1f;
+
     private void Awake()
     {
         _input = GetComponent<StarterAssetsInputs>();
         _thirdPersonController = GetComponent<ThirdPersonController>();
         _animator = GetComponent<Animator>();
+        _sensitivity_additive = 0.0f;
     }
 
     private void Update()
     {
+        _sensitivity_additive += _sensitivityIncreaseRate * Time.deltaTime;
+
         Vector3 mousePosition = Vector3.zero;
 
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -52,7 +58,7 @@ public class ThirdPlayerShooter : MonoBehaviour
 
         if (_input.aim) {
             _aimVirtualCamera.gameObject.SetActive(true);
-            _thirdPersonController.SetSensitivity(_aimSensitivity);
+            _thirdPersonController.SetSensitivity(_aimSensitivity + _sensitivity_additive);
             _thirdPersonController.SetCanRotate(false);
             _animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
 
@@ -63,7 +69,7 @@ public class ThirdPlayerShooter : MonoBehaviour
             transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
         } else {
             _aimVirtualCamera.gameObject.SetActive(false);
-            _thirdPersonController.SetSensitivity(_normalSensitivity);
+            _thirdPersonController.SetSensitivity(_normalSensitivity + _sensitivity_additive);
             _thirdPersonController.SetCanRotate(true);
             _animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
         }
