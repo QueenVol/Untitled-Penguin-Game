@@ -13,13 +13,6 @@ public class AndsonSceneEffecter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.anyKeyDown || Input.GetMouseButtonDown(0))
-        {
-            if (!StartScreenTexts.isPaused)
-            {
-                AndsonPlayerMovement.inputDelay += 0.008f;
-                Time.timeScale += 0.04F;
-            }
-        }
+        
     }
 }
