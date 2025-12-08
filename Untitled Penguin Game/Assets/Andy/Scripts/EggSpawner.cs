@@ -33,7 +33,7 @@ public class EggSpawner : MonoBehaviour
     void Start()
     {
         finalDisturbMode = Random.Range(0, 4);
-        andsonFinalDisturbMode =2;
+        andsonFinalDisturbMode = Random.Range(0, 5);
         Debug.Log("Selected Disturb Mode = " + finalDisturbMode);
 
         if (fadeImage != null)
