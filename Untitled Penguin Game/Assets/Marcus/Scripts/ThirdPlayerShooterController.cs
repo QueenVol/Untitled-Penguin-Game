@@ -5,6 +5,7 @@ using Cinemachine;
 using StarterAssets;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.SceneManagement;
 
 public class ThirdPlayerShooter : MonoBehaviour
 {
@@ -23,17 +24,57 @@ public class ThirdPlayerShooter : MonoBehaviour
     [SerializeField] private float _sensitivity_additive = 0.0f;
     [SerializeField] private float _sensitivityIncreaseRate = 0.1f;
 
+    [Header("Scene Transition Settings")]
+    [SerializeField] private float _sensitivityThreshold = 40.0f;
+    [SerializeField] private List<string> _randomScenes;
+
     private void Awake()
     {
         _input = GetComponent<StarterAssetsInputs>();
         _thirdPersonController = GetComponent<ThirdPersonController>();
         _animator = GetComponent<Animator>();
         _sensitivity_additive = 0.0f;
+        
+        LoadSceneState();
     }
 
     private void Update()
     {
         _sensitivity_additive += _sensitivityIncreaseRate * Time.deltaTime;
+
+        if (_sensitivity_additive >= _sensitivityThreshold)
+        {
+            if (_randomScenes != null && _randomScenes.Count > 0)
+            {
+                List<string> availableScenes = new List<string>();
+
+                foreach (string scene in _randomScenes)
+                {
+                    if (!IsSceneFinished(scene))
+                    {
+                        availableScenes.Add(scene);
+                    }
+                }
+
+                // If all scenes are finished, fall back to the full list (or handle as game complete)
+                if (availableScenes.Count == 0)
+                {
+                    Debug.Log("All scenes are finished! Picking from full list.");
+                    availableScenes = _randomScenes;
+                }
+
+                int randomIndex = UnityEngine.Random.Range(0, availableScenes.Count);
+                string sceneToLoad = availableScenes[randomIndex];
+                
+                Debug.Log($"Sensitivity threshold reached! Loading scene: {sceneToLoad}");
+                
+                SaveSceneState();
+
+                _sensitivity_additive = 0f; 
+                SceneManager.LoadScene(sceneToLoad);
+                return;
+            }
+        }
 
         Vector3 mousePosition = Vector3.zero;
 
@@ -106,5 +147,73 @@ public class ThirdPlayerShooter : MonoBehaviour
 
             _input.shoot = false;
         }
+    }
+
+    private void SaveSceneState()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        string key = sceneName + "_PlayerState";
+
+        PlayerPrefs.SetFloat(key + "_PosX", transform.position.x);
+        PlayerPrefs.SetFloat(key + "_PosY", transform.position.y);
+        PlayerPrefs.SetFloat(key + "_PosZ", transform.position.z);
+
+        PlayerPrefs.SetFloat(key + "_RotX", transform.rotation.x);
+        PlayerPrefs.SetFloat(key + "_RotY", transform.rotation.y);
+        PlayerPrefs.SetFloat(key + "_RotZ", transform.rotation.z);
+        PlayerPrefs.SetFloat(key + "_RotW", transform.rotation.w);
+
+        PlayerPrefs.SetInt(key + "_BubbleMode", isBubbleMode ? 1 : 0);
+        PlayerPrefs.SetInt(key + "_Exists", 1);
+        
+        PlayerPrefs.Save();
+        Debug.Log($"Saved state for {sceneName}");
+    }
+
+    private void LoadSceneState()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        string key = sceneName + "_PlayerState";
+
+        if (PlayerPrefs.HasKey(key + "_Exists"))
+        {
+            float x = PlayerPrefs.GetFloat(key + "_PosX");
+            float y = PlayerPrefs.GetFloat(key + "_PosY");
+            float z = PlayerPrefs.GetFloat(key + "_PosZ");
+            
+            float rotX = PlayerPrefs.GetFloat(key + "_RotX");
+            float rotY = PlayerPrefs.GetFloat(key + "_RotY");
+            float rotZ = PlayerPrefs.GetFloat(key + "_RotZ");
+            float rotW = PlayerPrefs.GetFloat(key + "_RotW");
+
+            bool savedBubbleMode = PlayerPrefs.GetInt(key + "_BubbleMode") == 1;
+            
+            // Disable CharacterController temporarily to set position
+            CharacterController cc = GetComponent<CharacterController>();
+            bool wasEnabled = false;
+            if (cc != null) 
+            {
+                wasEnabled = cc.enabled;
+                cc.enabled = false;
+            }
+            
+            transform.position = new Vector3(x, y, z);
+            transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+            
+            if (cc != null) cc.enabled = wasEnabled;
+
+            isBubbleMode = savedBubbleMode;
+            Debug.Log($"Loaded state for {sceneName}");
+        }
+    }
+
+    private bool IsSceneFinished(string sceneName)
+    {
+        
+        if (sceneName == "AndsonScene") return AndsonAcrossSceneSaver.AndsonHasFinished;
+        if (sceneName == "KevinMainScene") return KevinIsFinished.kevinIsFinished;
+        if (sceneName == "Andy") return PlayerController.stupidAndyFinished;
+
+        return false;
     }
 }
