@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         isGameWon = false;
+        
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
         ThirdPlayerShooter thirdPlayerShooter = FindObjectOfType<ThirdPlayerShooter>();
         if (thirdPlayerShooter != null)
         {
-            thirdPlayerShooter.changeScene();
+            thirdPlayerShooter.LoadRandomSceneBasedOnBools();
         }
     }
 }
