@@ -27,8 +27,11 @@ public class EggSpawner : MonoBehaviour
 
     private int finalDisturbMode;
     private int andsonFinalDisturbMode;
+    private int nextRandomScene;
 
     public AndsonCameraFollow cameraFollow;
+
+    public SaveLoad saveload;
 
     void Start()
     {
@@ -87,7 +90,13 @@ public class EggSpawner : MonoBehaviour
             IncreaseGameSpeed();
 
 
-        
+        if (currentCount >= maxCount)
+        {
+            saveload.SavePlayer();
+            nextRandomScene = Random.Range(0, 2);
+            SceneManager.LoadScene(nextRandomScene);
+        }
+
     }
 
 
