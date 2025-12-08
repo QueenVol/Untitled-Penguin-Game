@@ -13,6 +13,10 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
 
     private bool hasSavedPlayerPosition = false;  // 是否已经有保存的位置
 
+
+  
+
+
     void Awake()
     {
         if (Instance == null)
@@ -28,6 +32,7 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 
     private void OnDestroy()
     {
@@ -88,22 +93,42 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
         Time.timeScale = 1;
         AndsonPlayerMovement.inputDelay = 0f;
 
-        int randomer = Random.Range(0, 3);
-
-        if (randomer == 0)
-        {
-            SceneManager.LoadScene("Andy");
-        }
-        else if (randomer == 1)
-        {
-            SceneManager.LoadScene("KevinMainScene");
-        }
-        else
-        {
-            SceneManager.LoadScene("Andy");
-        }
+        LoadRandomSceneBasedOnBools();
     }
+    public void LoadRandomSceneBasedOnBools()
+    {
+        List<string> scenePool = new List<string>();
 
+        // 只要对应的 bool == false，就加入随机列表
+        if (!KevinIsFinished.kevinIsFinished)
+            scenePool.Add("KevinMainScene");
+
+        if (!PlayerController.StupidAndyFinished)
+            scenePool.Add("Andy");
+
+        if (!GameManager.isGameWon)
+            scenePool.Add("Playground 1");   // 举例（如果你有第三个场景的话）
+
+        // 如果列表为空 → 全部完成
+        if (scenePool.Count == 0)
+        {
+            if (!AndsonHasFinished)
+            {
+                SceneManager.LoadScene("AndsonScene");
+            }
+            else
+            {
+            
+            }
+        }
+
+        // 随机挑选
+        int index = Random.Range(0, scenePool.Count);
+        string targetScene = scenePool[index];
+
+        Debug.Log("切换到 Scene：" + targetScene);
+        SceneManager.LoadScene(targetScene);
+    }
     private IEnumerator SetPlayerPosNextFrame()
     {
         // 等一帧，确保场景里的对象都已经初始化好了
