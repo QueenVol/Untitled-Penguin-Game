@@ -6,7 +6,7 @@ public class SaveLoad : MonoBehaviour
 {
     public PlayerController player;
 
-    void Start()
+    void Awake()
     {
         LoadPlayer();
     }
