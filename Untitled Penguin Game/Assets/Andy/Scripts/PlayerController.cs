@@ -32,17 +32,24 @@ public class PlayerController : MonoBehaviour
     public GameObject message;
 
     //states
-    public bool isLeg = false;
-    public bool isWing = false;
+    public static bool isLeg = false;
+    public static bool isWing = false;
+
+    public static bool m1played = false;
+    public static bool m2played = false;
 
     public AudioSource audio;
     public AudioClip eggCrack;
+
+    public SaveLoad saveLoad;
 
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
         myFeet = GetComponent<BoxCollider2D>();
+
+        saveLoad.LoadPlayer();
     }
 
     void Update()
@@ -53,7 +60,17 @@ public class PlayerController : MonoBehaviour
         CheckGrounded();
         SwitchAnimation();
 
-
+        if (isLeg)
+        {
+            leg1.SetActive(true);
+            leg2.SetActive(true);
+            jumpSpeed = 8f;
+        }
+        if (isWing)
+        {
+            wing1.SetActive(true);
+            wing2.SetActive(true);
+        }
     }
 
     void CheckGrounded()
@@ -147,25 +164,38 @@ public class PlayerController : MonoBehaviour
         }
         if (collision.gameObject.tag == "Music")
         {
-            levelMusic.SetActive(true);
-            Destroy(musicTrigger);
+            if (!m1played)
+            {
+                levelMusic.SetActive(true);
+                Destroy(musicTrigger);
+                m1played = true;
+            }
         }
         if (collision.gameObject.tag == "Music2")
         {
-            levelMusic2.SetActive(true);
-            Destroy(musicTrigger2);
+            if (!m2played)
+            {
+                levelMusic2.SetActive(true);
+                Destroy(musicTrigger2);
+                m2played = true;
+            }
         }
         if (collision.gameObject.tag == "Music3")
         {
             levelMusic3.SetActive(true);
             Destroy(musicTrigger3);
             penguin.SetActive(false);
-            StupidAndyFinished = true;
+            StartCoroutine(SetFinishedAfterDelay(10f));
         }
         if (collision.gameObject.tag == "Grave")
         {
             message.SetActive(false);
         }
+    }
+    private IEnumerator SetFinishedAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StupidAndyFinished = true;
     }
 
     void Leg()
@@ -173,9 +203,6 @@ public class PlayerController : MonoBehaviour
         if (isLeg == false)
         {
             audio.PlayOneShot(eggCrack);
-            leg1.SetActive(true);
-            leg2.SetActive(true);
-            jumpSpeed = 8f;
         }
     }
 
@@ -185,8 +212,6 @@ public class PlayerController : MonoBehaviour
         if (isWing == false)
         {
             audio.PlayOneShot(eggCrack);
-            wing1.SetActive(true);
-            wing2.SetActive(true);
         }
     }
 

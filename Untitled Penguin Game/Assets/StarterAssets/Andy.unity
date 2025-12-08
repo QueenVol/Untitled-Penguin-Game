@@ -15742,7 +15742,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 63.76915, y: -10.581621}
+  m_Offset: {x: 59.23175, y: -75.61748}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -15753,7 +15753,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 96.9357, y: 5.5133343}
+  m_Size: {x: 123.48782, y: 135.58505}
   m_EdgeRadius: 0
 --- !u!1 &386316852
 GameObject:
@@ -29467,11 +29467,10 @@ MonoBehaviour:
   baseShakeMagnitude: 0.2
   baseShakeDuration: 0.1
   fadeImage: {fileID: 161532792}
-  maxCount: 12
+  maxCount: 18
   nextSceneName: 
   currentCount: 0
   cameraFollow: {fileID: 0}
-  saveload: {fileID: 843340138}
 --- !u!4 &767469800
 Transform:
   m_ObjectHideFlags: 0
@@ -32507,6 +32506,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1622606468}
+  playerPosition: {x: 0, y: 0}
 --- !u!4 &843340139
 Transform:
   m_ObjectHideFlags: 0
@@ -59414,7 +59414,7 @@ GameObject:
   - component: {fileID: 1622606471}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59428,7 +59428,7 @@ Transform:
   m_GameObject: {fileID: 1622606464}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -59524,10 +59524,9 @@ MonoBehaviour:
   musicTrigger2: {fileID: 448245149}
   musicTrigger3: {fileID: 385210982}
   message: {fileID: 130995880}
-  isLeg: 0
-  isWing: 0
   audio: {fileID: 1622606471}
   eggCrack: {fileID: 8300000, guid: dc39b1f70e366914c9e38311016f1c02, type: 3}
+  saveLoad: {fileID: 843340138}
 --- !u!61 &1622606469
 BoxCollider2D:
   m_ObjectHideFlags: 0
