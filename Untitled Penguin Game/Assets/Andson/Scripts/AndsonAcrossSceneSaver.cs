@@ -13,6 +13,7 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
 
     private bool hasSavedPlayerPosition = false;  // 是否已经有保存的位置
 
+    public static bool hasEndScene = false;
 
   
 
@@ -160,9 +161,10 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
 
     public void IfEndScene()
     {
-        if (KevinIsFinished.kevinIsFinished && PlayerController.StupidAndyFinished && GameManager.isGameWon && AndsonHasFinished)
+        if (KevinIsFinished.kevinIsFinished && PlayerController.StupidAndyFinished && GameManager.isGameWon && AndsonHasFinished && !hasEndScene)
         {
             SceneManager.LoadScene("EndScene");
+            hasEndScene = true;
         }
         
     }
