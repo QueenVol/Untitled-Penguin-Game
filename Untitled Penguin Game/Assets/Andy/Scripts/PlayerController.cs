@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public static bool isFinished = false;
+    public static bool StupidAndyFinished = false;
 
     public float runSpeed;
     public float jumpSpeed;
@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
             levelMusic3.SetActive(true);
             Destroy(musicTrigger3);
             penguin.SetActive(false);
-            isFinished = true;
+            StupidAndyFinished = true;
         }
         if (collision.gameObject.tag == "Grave")
         {
