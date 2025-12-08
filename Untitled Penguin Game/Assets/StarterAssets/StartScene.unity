@@ -4390,6 +4390,7 @@ MonoBehaviour:
   - KevinMainScene
   - Andy
   - AndsonScene
+  - Playground 1
   fadeDuration: 0.05
   stayDuration: 0.075
   titleDelay: 0.5
