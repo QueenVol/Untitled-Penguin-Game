@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Marcus/Scenes/Playground 1.unity
     guid: b0dd6272eb1a04048813c7ef3d57e32a
+  - enabled: 1
+    path: Assets/StarterAssets/EndScene.unity
+    guid: 964a982d38b5ef9499c013682d992d0e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}
