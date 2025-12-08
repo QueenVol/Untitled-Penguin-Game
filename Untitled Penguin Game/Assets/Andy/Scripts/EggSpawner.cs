@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -119,19 +120,82 @@ public class EggSpawner : MonoBehaviour
         if (currentCount >= maxCount)
         {
             SaveLoad.Instance.SavePlayer();
-            nextRandomScene = Random.Range(1, 4);
-            Time.timeScale = 1;
-            if (nextRandomScene != 3)
-            {
-                if (nextRandomScene == 1 && !AndsonAcrossSceneSaver.AndsonHasFinished)
-                    SceneManager.LoadScene(nextRandomScene);
 
-                //if (nextRandomScene == 2 && !KevinIsFinished.kevinIsFinished)
-                    //SceneManager.LoadScene(nextRandomScene);
+            Time.timeScale = 1;
+
+            LoadRandomSceneBasedOnBools();
+        }
+
+    }
+
+    public void LoadRandomSceneBasedOnBools()
+    {
+        List<string> scenePool = new List<string>();
+
+        // 只要对应的 bool == false，就加入随机列表
+        if (!KevinIsFinished.kevinIsFinished)
+            scenePool.Add("KevinMainScene");
+
+        if (!AndsonAcrossSceneSaver.AndsonHasFinished)
+            scenePool.Add("AndsonScene");
+
+        if (!GameManager.isGameWon)
+            scenePool.Add("Playground 1");   // 举例（如果你有第三个场景的话）
+
+        // 如果列表为空 → 全部完成
+        if (scenePool.Count == 0)
+        {
+            if (!PlayerController.StupidAndyFinished)
+            {
+                SceneManager.LoadScene("Andy");
+            }
+            else
+            {
 
             }
         }
 
+        // 随机挑选
+        int index = Random.Range(0, scenePool.Count);
+        string targetScene = scenePool[index];
+
+        Debug.Log("切换到 Scene：" + targetScene);
+        SceneManager.LoadScene(targetScene);
+    }
+
+    public void YKYVersionLoadRandomSceneBasedOnBools()
+    {
+        List<string> scenePool = new List<string>();
+
+        // 只要对应的 bool == false，就加入随机列表
+        if (!PlayerController.StupidAndyFinished)
+            scenePool.Add("Andy");
+
+        if (!AndsonAcrossSceneSaver.AndsonHasFinished)
+            scenePool.Add("AndsonScene");
+
+        if (!GameManager.isGameWon)
+            scenePool.Add("Playground 1");
+
+        // 如果列表为空 → 全部完成
+        if (scenePool.Count == 0)
+        {
+            if (!KevinIsFinished.kevinIsFinished)
+            {
+                SceneManager.LoadScene("KevinMainScene");
+            }
+            else
+            {
+
+            }
+        }
+
+        // 随机挑选
+        int index = Random.Range(0, scenePool.Count);
+        string targetScene = scenePool[index];
+
+        Debug.Log("切换到 Scene：" + targetScene);
+        SceneManager.LoadScene(targetScene);
     }
 
 
@@ -176,9 +240,8 @@ public class EggSpawner : MonoBehaviour
 
         if (currentCount >= maxCount)
         {
-            nextRandomScene = Random.Range(1, 4);
             Time.timeScale = 1;
-            SceneManager.LoadScene(nextRandomScene);
+            YKYVersionLoadRandomSceneBasedOnBools();
         }
 
 
