@@ -27,6 +27,7 @@ public class ThirdPlayerShooter : MonoBehaviour
     [Header("Scene Transition Settings")]
     [SerializeField] private float _sensitivityThreshold = 40.0f;
     [SerializeField] private List<string> _randomScenes;
+    public bool disturbThresholdReached = false;
 
     private void Awake()
     {
@@ -37,14 +38,8 @@ public class ThirdPlayerShooter : MonoBehaviour
         
         LoadSceneState();
     }
-
-    private void Update()
-    {
-        _sensitivity_additive += _sensitivityIncreaseRate * Time.deltaTime;
-
-        if (_sensitivity_additive >= _sensitivityThreshold)
-        {
-            if (_randomScenes != null && _randomScenes.Count > 0)
+    void changeScene(){
+        if (_randomScenes != null && _randomScenes.Count > 0)
             {
                 List<string> availableScenes = new List<string>();
 
@@ -74,6 +69,14 @@ public class ThirdPlayerShooter : MonoBehaviour
                 SceneManager.LoadScene(sceneToLoad);
                 return;
             }
+    }
+    private void Update()
+    {
+        _sensitivity_additive += _sensitivityIncreaseRate * Time.deltaTime;
+
+        if (_sensitivity_additive >= _sensitivityThreshold || disturbThresholdReached)
+        {
+            changeScene();
         }
 
         Vector3 mousePosition = Vector3.zero;
@@ -215,9 +218,9 @@ public class ThirdPlayerShooter : MonoBehaviour
     private bool IsSceneFinished(string sceneName)
     {
         
-        if (sceneName == "AndsonScene") return AndsonAcrossSceneSaver.AndsonHasFinished;
-        if (sceneName == "KevinMainScene") return KevinIsFinished.kevinIsFinished;
-        if (sceneName == "Andy") return PlayerController.stupidAndyFinished;
+        //if (sceneName == "AndsonScene") return AndsonAcrossSceneSaver.AndsonHasFinished;
+        //if (sceneName == "KevinMainScene") return KevinIsFinished.kevinIsFinished;
+        //if (sceneName == "Andy") return PlayerController.stupidAndyFinished;
 
         return false;
     }

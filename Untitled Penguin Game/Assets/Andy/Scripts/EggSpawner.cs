@@ -27,6 +27,7 @@ public class EggSpawner : MonoBehaviour
 
     private int finalDisturbMode;
     private int andsonFinalDisturbMode;
+    private int marcusFinalDisturbMode;
     private int nextRandomScene;
 
     public AndsonCameraFollow cameraFollow;
@@ -96,10 +97,11 @@ public class EggSpawner : MonoBehaviour
 
         if (currentCount >= maxCount)
         {
-            saveload.SavePlayer();
-            nextRandomScene = Random.Range(1, 4);
-            Time.timeScale = 1;
-            SceneManager.LoadScene(nextRandomScene);
+            ThirdPlayerShooter thirdPlayerShooter = FindObjectOfType<ThirdPlayerShooter>();
+            if (thirdPlayerShooter != null)
+            {
+                thirdPlayerShooter.disturbThresholdReached = true;
+            }
         }
     }
 
