@@ -29469,6 +29469,9 @@ MonoBehaviour:
   fadeImage: {fileID: 161532792}
   maxCount: 12
   nextSceneName: 
+  currentCount: 0
+  cameraFollow: {fileID: 0}
+  saveload: {fileID: 843340138}
 --- !u!4 &767469800
 Transform:
   m_ObjectHideFlags: 0
@@ -32503,7 +32506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78f5ad30809782f48be0540b98c3f055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 1622606468}
 --- !u!4 &843340139
 Transform:
   m_ObjectHideFlags: 0
