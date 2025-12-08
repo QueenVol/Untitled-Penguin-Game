@@ -74,7 +74,7 @@ public class ThirdPlayerShooter : MonoBehaviour
     {
         _sensitivity_additive += _sensitivityIncreaseRate * Time.deltaTime;
 
-        if (_sensitivity_additive >= _sensitivityThreshold || disturbThresholdReached)
+        if (!GameManager.isGameWon && (_sensitivity_additive >= _sensitivityThreshold || disturbThresholdReached))
         {
             changeScene();
         }
