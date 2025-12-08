@@ -1,68 +1,103 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class SaveLoad : MonoBehaviour
 {
+    public static SaveLoad Instance;
     public PlayerController player;
+    public Vector2 playerPosition;
+
+    void Start()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        if (SceneManager.GetActiveScene().name == "Andy")
+        {
+            LoadPlayer();
+        }
+    }
+
+    public void SavePlayer()
+    {
+        if (player == null) return;
+
+        //PlayerPrefs.SetFloat("PlayerX", player.transform.position.x);
+       // PlayerPrefs.SetFloat("PlayerY", player.transform.position.y);
+        playerPosition = player.transform.position;
+       // PlayerPrefs.Save();
+
+      //  Debug.Log("Saved Position: " + player.transform.position);
+    }
+
+    public void LoadPlayer()
+    {
+        if (player == null) print("222");
+
+        //if (!PlayerPrefs.HasKey("PlayerX"))
+        //       return;
+
+        // float x = PlayerPrefs.GetFloat("PlayerX");
+        //  float y = PlayerPrefs.GetFloat("PlayerY");
+
+        player.transform.position = playerPosition;
+
+       // Debug.Log("Loaded Position: " + new Vector2(x, y));
+    }
 
     void Awake()
     {
-        LoadPlayer();
+        DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    public void SavePlayer()
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        PlayerPrefs.SetInt("isLeg", player.isLeg ? 1 : 0);
-        PlayerPrefs.SetInt("isWing", player.isWing ? 1 : 0);
-
-        PlayerPrefs.SetFloat("PlayerX", player.transform.position.x);
-        PlayerPrefs.SetFloat("PlayerY", player.transform.position.y);
-        PlayerPrefs.SetFloat("PlayerZ", player.transform.position.z);
-
-        PlayerPrefs.SetFloat("jumpSpeed", player.jumpSpeed);
-
-        PlayerPrefs.SetInt("penguinActive", player.penguin.activeSelf ? 1 : 0);
-
-        PlayerPrefs.SetInt("musicTrigger1", player.musicTrigger == null ? 0 : 1);
-        PlayerPrefs.SetInt("musicTrigger2", player.musicTrigger2 == null ? 0 : 1);
-        PlayerPrefs.SetInt("musicTrigger3", player.musicTrigger3 == null ? 0 : 1);
-
-        PlayerPrefs.Save();
-
-        Debug.Log("Game Saved!");
+        Debug.Log("切换到 Scene：" + scene.name);
+        StartCoroutine(DelayedSceneEnter());
     }
-    public void LoadPlayer()
+
+    IEnumerator DelayedSceneEnter()
     {
-        if (!PlayerPrefs.HasKey("isLeg"))
-            return;
+        // 等待一帧
+        yield return null;
 
-        player.isLeg = PlayerPrefs.GetInt("isLeg") == 1;
-        player.leg1.SetActive(player.isLeg);
-        player.leg2.SetActive(player.isLeg);
+        // 尝试寻找 Player
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
 
-        player.isWing = PlayerPrefs.GetInt("isWing") == 1;
-        player.wing1.SetActive(player.isWing);
-        player.wing2.SetActive(player.isWing);
+        // 如果该场景根本没有 Player，则直接跳过（避免报错）
+        if (playerObj == null)
+        {
+            Debug.Log("Scene 不包含 Player，不执行玩家位置复原。");
+            yield break;
+        }
 
-        player.jumpSpeed = PlayerPrefs.GetFloat("jumpSpeed", player.jumpSpeed);
+        player = playerObj.GetComponent<PlayerController>();
 
-        float x = PlayerPrefs.GetFloat("PlayerX", player.transform.position.x);
-        float y = PlayerPrefs.GetFloat("PlayerY", player.transform.position.y);
-        float z = PlayerPrefs.GetFloat("PlayerZ", player.transform.position.z);
-        player.transform.position = new Vector3(x, y, z);
+        // 再保险一次：player 脚本不存在
+        if (player == null)
+        {
+            Debug.LogWarning("找到 Player 物体，但没有 PlayerController 组件。");
+            yield break;
+        }
 
-        bool penguinActive = PlayerPrefs.GetInt("penguinActive", 1) == 1;
-        player.penguin.SetActive(penguinActive);
+        // 最终安全设置位置
+        player.transform.position = playerPosition;
+        Debug.Log("玩家位置已复原：" + playerPosition);
+    }
 
-        if (PlayerPrefs.GetInt("musicTrigger1", 1) == 0 && player.musicTrigger != null)
-            Destroy(player.musicTrigger);
-
-        if (PlayerPrefs.GetInt("musicTrigger2", 1) == 0 && player.musicTrigger2 != null)
-            Destroy(player.musicTrigger2);
-
-        if (PlayerPrefs.GetInt("musicTrigger3", 1) == 0 && player.musicTrigger3 != null)
-            Destroy(player.musicTrigger3);
-
-        Debug.Log("Game Loaded!");
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

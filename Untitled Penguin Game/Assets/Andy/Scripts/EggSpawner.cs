@@ -31,8 +31,6 @@ public class EggSpawner : MonoBehaviour
 
     public AndsonCameraFollow cameraFollow;
 
-    public SaveLoad saveload;
-
     void Start()
     {
         finalDisturbMode = Random.Range(0, 4);
@@ -89,10 +87,18 @@ public class EggSpawner : MonoBehaviour
 
         if (currentCount >= maxCount)
         {
-            saveload.SavePlayer();
+            SaveLoad.Instance.SavePlayer();
             nextRandomScene = Random.Range(1, 4);
             Time.timeScale = 1;
-            SceneManager.LoadScene(nextRandomScene);
+            if (nextRandomScene != 3)
+            {
+                if (nextRandomScene == 1 && !AndsonAcrossSceneSaver.AndsonHasFinished)
+                    SceneManager.LoadScene(nextRandomScene);
+
+                //if (nextRandomScene == 2 && !KevinIsFinished.kevinIsFinished)
+                    //SceneManager.LoadScene(nextRandomScene);
+
+            }
         }
 
     }
