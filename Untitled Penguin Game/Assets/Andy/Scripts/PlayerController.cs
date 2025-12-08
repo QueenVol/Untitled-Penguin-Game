@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
     public AudioClip eggCrack;
 
     public SaveLoad saveLoad;
+    public EggSpawner eggSpawner;
 
     void Start()
     {
@@ -184,6 +185,7 @@ public class PlayerController : MonoBehaviour
             levelMusic3.SetActive(true);
             Destroy(musicTrigger3);
             penguin.SetActive(false);
+            StupidAndyFinished = true;
             StartCoroutine(SetFinishedAfterDelay(10f));
         }
         if (collision.gameObject.tag == "Grave")
@@ -194,7 +196,8 @@ public class PlayerController : MonoBehaviour
     private IEnumerator SetFinishedAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        StupidAndyFinished = true;
+
+        eggSpawner.LoadRandomSceneBasedOnBools();
     }
 
     void Leg()
