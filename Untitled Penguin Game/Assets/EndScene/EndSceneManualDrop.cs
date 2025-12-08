@@ -130,6 +130,7 @@ public class EndSceneManualDrop : MonoBehaviour
 
     public void RestartGame()
     {
+        GameStartFlag.isNewGame = true;
         SceneManager.LoadScene(0);
     }
 }

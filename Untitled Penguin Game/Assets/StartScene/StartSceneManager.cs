@@ -101,6 +101,7 @@ public class StartSceneManager : MonoBehaviour
             return;
         }
 
+        GameStartFlag.isNewGame = true;
         int index = Random.Range(0, randomScenes.Length);
         SceneManager.LoadScene(randomScenes[index]);
     }
