@@ -178,7 +178,7 @@ public class ThirdPlayerShooter : MonoBehaviour
         string sceneName = SceneManager.GetActiveScene().name;
         string key = sceneName + "_PlayerState";
 
-        if (PlayerPrefs.HasKey(key + "_Exists"))
+        if (!GameStartFlag.isNewGame && PlayerPrefs.HasKey(key + "_Exists"))
         {
             float x = PlayerPrefs.GetFloat(key + "_PosX");
             float y = PlayerPrefs.GetFloat(key + "_PosY");
@@ -214,7 +214,7 @@ public class ThirdPlayerShooter : MonoBehaviour
     {
         _sensitivityIncreaseRate = amount;
     }
-    /*public void LoadRandomSceneBasedOnBools()
+    public void LoadRandomSceneBasedOnBools()
     {
         List<string> scenePool = new List<string>();
 
@@ -242,12 +242,12 @@ public class ThirdPlayerShooter : MonoBehaviour
         }
 
         // 随机挑选
-        int index = Random.Range(0, scenePool.Count);
+        int index = UnityEngine.Random.Range(0, scenePool.Count);
         string targetScene = scenePool[index];
 
         Debug.Log("切换到 Scene：" + targetScene);
         SceneManager.LoadScene(targetScene);
-    }*/
+    }
     private bool IsSceneFinished(string sceneName)
     {
         if (sceneName == "AndsonScene") return AndsonAcrossSceneSaver.AndsonHasFinished;
@@ -255,5 +255,10 @@ public class ThirdPlayerShooter : MonoBehaviour
         if (sceneName == "Andy") return PlayerController.StupidAndyFinished;
 
         return false;
+    }
+
+    private void OnDestroy()
+    {
+        GameStartFlag.isNewGame = false;
     }
 }
