@@ -75,8 +75,10 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
             }
         }
 
+        IfEndScene();
+
         // 先判断 spawner 是否存在，避免在其他场景里报 NullReference
-       
+
     }
 
     public void LoadAnotherRandomScene()
@@ -149,6 +151,14 @@ public class AndsonAcrossSceneSaver : MonoBehaviour
         {
             playerPosition = player.transform.position;
             hasSavedPlayerPosition = true;
+        }
+    }
+
+    public void IfEndScene()
+    {
+        if (KevinIsFinished.kevinIsFinished && PlayerController.StupidAndyFinished && GameManager.isGameWon && AndsonHasFinished)
+        {
+            SceneManager.LoadScene("EndScene");
         }
     }
 }
