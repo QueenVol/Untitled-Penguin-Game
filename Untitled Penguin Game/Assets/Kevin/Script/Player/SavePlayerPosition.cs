@@ -6,43 +6,39 @@ using UnityEngine.SceneManagement;
 public class SavePlayerPosition : MonoBehaviour
 {
     private string sceneName;
+    private string keyX;
+    private string keyY;
 
-    public static bool isReloadingByDeath = false;
+    public static bool isReloadByDeath = false;
+    private static bool allowSave = true;
 
     void Awake()
     {
-        PlayerPrefs.DeleteAll();
         sceneName = SceneManager.GetActiveScene().name;
-        LoadPosition();
+
+        keyX = "MYPLAYER_" + sceneName + "_x";
+        keyY = "MYPLAYER_" + sceneName + "_y";
+
+        allowSave = true;
+
+        if (PlayerPrefs.HasKey(keyX))
+        {
+            float x = PlayerPrefs.GetFloat(keyX);
+            float y = PlayerPrefs.GetFloat(keyY);
+
+            transform.position = new Vector3(x, y, transform.position.z);
+        }
     }
 
     void OnDestroy()
     {
-        if (!isReloadingByDeath)
+        if (!isReloadByDeath && allowSave)
         {
-            SavePosition();
-        }
-        else
-        {
-            isReloadingByDeath = false;
-        }
-    }
+            allowSave = false;
 
-    public void SavePosition()
-    {
-        PlayerPrefs.SetFloat(sceneName + "_x", transform.position.x);
-        PlayerPrefs.SetFloat(sceneName + "_y", transform.position.y);
-        PlayerPrefs.Save();
-    }
-
-    void LoadPosition()
-    {
-        if (PlayerPrefs.HasKey(sceneName + "_x"))
-        {
-            float x = PlayerPrefs.GetFloat(sceneName + "_x");
-            float y = PlayerPrefs.GetFloat(sceneName + "_y");
-
-            transform.position = new Vector3(x, y, transform.position.z);
+            PlayerPrefs.SetFloat(keyX, transform.position.x);
+            PlayerPrefs.SetFloat(keyY, transform.position.y);
+            PlayerPrefs.Save();
         }
     }
 }

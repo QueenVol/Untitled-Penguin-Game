@@ -8,51 +8,51 @@ public class ChaseZone : MonoBehaviour
     public Transform spawnPoint;
     public Transform player;
 
+    public static bool canCatchPlayer = false;
+
     private GameObject spawnedEnemy;
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        MusicManager.Instance.PlayChaseMusic();
+
+        if (spawnedEnemy == null)
         {
-            MusicManager.Instance.PlayChaseMusic();
+            spawnedEnemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
 
-            if (spawnedEnemy == null)
-            {
-                Vector3 spawnPos = spawnPoint.position;
+            EnemyChase chase = spawnedEnemy.GetComponent<EnemyChase>();
+            chase.target = player;
+            chase.isChasing = true;
 
-                string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-                string enemyKey = sceneName + "_Enemy";
-
-                if (PlayerPrefs.HasKey(enemyKey + "_x"))
-                {
-                    float x = PlayerPrefs.GetFloat(enemyKey + "_x");
-                    float y = PlayerPrefs.GetFloat(enemyKey + "_y");
-                    spawnPos = new Vector3(x, y, 0);
-                }
-
-                spawnedEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-
-                EnemyChase chase = spawnedEnemy.GetComponent<EnemyChase>();
-                chase.target = player;
-                chase.isChasing = true;
-
-                CatchPlayer.canCatchPlayer = true;
-            }
+            canCatchPlayer = true;
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        if (spawnedEnemy != null)
         {
-            if (spawnedEnemy != null)
-            {
-                spawnedEnemy.GetComponent<EnemyChase>().isChasing = false;
-            }
-
-            MusicManager.Instance.PlayNormalMusic();
-
-            CatchPlayer.canCatchPlayer = false;
+            spawnedEnemy.GetComponent<EnemyChase>().isChasing = false;
         }
+
+        MusicManager.Instance.PlayNormalMusic();
+        canCatchPlayer = false;
+    }
+
+    void Update()
+    {
+        if (spawnedEnemy == null && canCatchPlayer == false)
+        {
+
+        }
+    }
+
+    public void ClearEnemy()
+    {
+        spawnedEnemy = null;
     }
 }

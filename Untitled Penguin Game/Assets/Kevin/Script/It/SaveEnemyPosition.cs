@@ -5,43 +5,26 @@ using UnityEngine.SceneManagement;
 
 public class SaveEnemyPosition : MonoBehaviour
 {
-    private string sceneName;
-    private string enemyKey;
+    private static Vector3 cachedEnemyPos;
+    private static string cachedSceneName = "";
 
-    void Start()
+    void Awake()
     {
-        sceneName = SceneManager.GetActiveScene().name;
-        enemyKey = sceneName + "_Enemy";
+        string currentScene = SceneManager.GetActiveScene().name;
 
-        LoadEnemyPosition();
+        if (cachedSceneName == currentScene && cachedEnemyPos != Vector3.zero)
+        {
+            transform.position = cachedEnemyPos;
+        }
+        else
+        {
+            cachedSceneName = currentScene;
+            cachedEnemyPos = Vector3.zero;
+        }
     }
 
     void OnDestroy()
     {
-        if (!SavePlayerPosition.isReloadingByDeath)
-        {
-            SaveEnemyPositionData();
-        }
-        else
-        {
-        }
-    }
-
-    void SaveEnemyPositionData()
-    {
-        PlayerPrefs.SetFloat(enemyKey + "_x", transform.position.x);
-        PlayerPrefs.SetFloat(enemyKey + "_y", transform.position.y);
-        PlayerPrefs.Save();
-    }
-
-    void LoadEnemyPosition()
-    {
-        if (PlayerPrefs.HasKey(enemyKey + "_x"))
-        {
-            float x = PlayerPrefs.GetFloat(enemyKey + "_x");
-            float y = PlayerPrefs.GetFloat(enemyKey + "_y");
-
-            transform.position = new Vector3(x, y, transform.position.z);
-        }
+        cachedEnemyPos = transform.position;
     }
 }
